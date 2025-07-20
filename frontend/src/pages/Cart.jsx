@@ -1,5 +1,5 @@
 // Cart.js
-import React, { use, useContext } from 'react';
+import React, { useContext } from 'react';
 import { HiOutlineX } from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi"; // Cart Icon
 import Cartproduct from '../components/Cartproduct'; // Importing Cartproduct component

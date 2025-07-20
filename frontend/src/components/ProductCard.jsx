@@ -1,10 +1,11 @@
-import React, { use, useContext } from "react";
+import React, { useContext } from "react";
 import Star from "./Star";
 import { cartContext } from "../Context/CartContext";
+import {Link} from 'react-router-dom'
 const ProductCard = (props) => {
   const context = useContext(cartContext);
   return (
-    <div className="bg-[#1a1a1a] p-5 mb-10 mt-3 hover:-translate-y-2 transition-all rounded-lg shadow-md hover:shadow-[#1a1a1a] duration-300">
+    <Link to={`product/${props.id}`} className="bg-[#1a1a1a] p-5 mb-10 mt-3 hover:-translate-y-2 transition-all rounded-lg shadow-md hover:shadow-[#1a1a1a] duration-300">
       <div className="align-items-center flex cursor-pointer -mx-2 flex-col mb-5">
         <img
           src={props.path}
@@ -36,7 +37,7 @@ const ProductCard = (props) => {
           Buy now
         </button>
       </div>
-    </div>
+    </Link>
   );
 };
 

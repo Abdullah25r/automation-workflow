@@ -1,24 +1,16 @@
 import Navbar from "./components/Navbar";
-import Card from "./components/ProductCard";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import News from "./pages/News";
 import Devices from "./pages/Devices";
-import Carousel from "./components/Carousel";
-import Productsheading from "./components/Productsheading";
-import Extras from "./components/Extras";
-import Gift from "./components/Gift";
 import Footer from "./components/Footer";
-import Watches from "./components/Watches";
-import Testimonial from "./components/Testimonial";
-
 import AboutTimePods from "./components/AboutTimePods";
 import ReturnRefundPolicy from "./components/ReturnRefundPolicy";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
-
+import ProductDetail from "./components/ProductsComponents/ProductDetail"
 function App() {
   return (
     <div className="min-h-screen text-white bg-black">
@@ -31,7 +23,7 @@ function App() {
           <Route path="/news" element={<News />} />
           <Route path="/devices" element={<Devices />} />
           <Route path="/Cart" element={<Cart />} />
-
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about" element={<AboutTimePods />} />
           <Route path="/return-refund" element={<ReturnRefundPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

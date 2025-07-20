@@ -1,4 +1,4 @@
-import React, { use, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { cartContext } from "../Context/CartContext";
 

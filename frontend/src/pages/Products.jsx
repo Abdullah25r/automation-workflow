@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ProductsHeader from "../components/ProductsComponents/ProductsHeader";
-import Card from "../components/ExploreProduct";
 import ProductCard from "../components/ProductCard";
 import { products } from "../AllProducts";
 
@@ -9,7 +8,7 @@ function filterProducts(category) {
     return products;
   }
   return products.filter((product) => {
-    return product.category == category;
+    return product.category === category;
   });
 }
 
