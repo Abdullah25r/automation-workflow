@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 function TermsConditions() {
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top on component mount
+    window.scrollTo(0, 0);
   }, []);
 
   return (
