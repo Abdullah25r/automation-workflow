@@ -15,11 +15,11 @@ function Cartproduct(props) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, x: 100, transition: { duration: 0.3 } }}
     >
-      <div className="h-28">
-        <img src={props.path} alt="img" className="h-28" />
+      <div className="mr-2 w-32 rounded-lg">
+        <img src={props.path} alt="img" className="rounded-lg" />
       </div>
 
-      <div className="mr-44">
+      <div className="mr-32">
         <h2 className="font-semibold font-poppins">{props.name}</h2>
         <p>${props.price}</p>
         <div className="flex gap-3  mt-6 bg-[#1a1a1a] px-2 justify-center rounded-md w-20">
