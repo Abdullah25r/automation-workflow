@@ -5,15 +5,7 @@ import { products } from "../AllProducts";
 
 function Cartproduct(props) {
     const cContext = useContext(cartContext)
-  const [count, setCount] = useState(1);
 
-  function increaseCount() {
-    return setCount((prev) => prev + 1);
-  }
-  function decreaseCount() {
-    if (count <= 1) return setCount(1);
-    return setCount((prev) => prev - 1);
-  }
 
   return (
     <div className="flex justify-between bg-[#2a2a2a] p-4 rounded-lg mb-4">
@@ -27,14 +19,14 @@ function Cartproduct(props) {
         <div className="flex gap-3  mt-6 bg-[#1a1a1a] px-2 justify-center rounded-md w-20">
           <button
             className=" p-1 font-bold py-0  rounded-sm"
-            onClick={decreaseCount}
+            onClick={() => cContext.decreaseCount(props.id)}
           >
             -
           </button>
-          <p>{count}</p>
+          <p>{props.count}</p>
           <button
             className=" p-1 font-bold py-0 rounded-sm "
-            onClick={increaseCount}
+            onClick={() => cContext.increaseCount(props.id)}
           >
             +
           </button>
@@ -42,7 +34,7 @@ function Cartproduct(props) {
       </div>
 
       <div className="flex flex-col items-center justify-between mb-5">
-        <p className="text-xl">${props.price}</p>
+        <p className="text-xl">${(props.price * props.count).toFixed(2)}</p>
         <button onClick={() => cContext.removeProduct(props.id)}> 
           <MdDelete className="text-2xl" title="delete" />
         </button>

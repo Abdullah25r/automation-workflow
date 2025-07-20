@@ -5,7 +5,7 @@ import { FiShoppingCart } from "react-icons/fi"; // Cart Icon
 import Cartproduct from '../components/Cartproduct'; // Importing Cartproduct component
 import { cartContext } from '../Context/CartContext'; // Importing cart context
 
-function Cart({ isOpen, onClose }) { 
+function Cart({ isOpen, onClose }){
 
     const cartProduct = useContext(cartContext);
     return (
@@ -30,6 +30,7 @@ function Cart({ isOpen, onClose }) {
                             path={item.path}
                             price={item.price}
                             id={item.id}
+                            count = {item.count}
                         />
                     )
                 })}
