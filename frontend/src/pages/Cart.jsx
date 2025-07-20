@@ -26,7 +26,7 @@ function Cart({ isOpen, onClose }) {
           <HiOutlineX className="text-2xl" />
         </button>
       </div>
-      <div className="p-4">
+      <div className="p-4 pr-2 h-[calc(100vh-100px)] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-[#1a1a1a]">
         <AnimatePresence>
           {cartProduct.items.map((item, index) => {
             return (
@@ -42,6 +42,9 @@ function Cart({ isOpen, onClose }) {
           })}
         </AnimatePresence>
       </div>
+      {/* <div>
+
+      </div> */}
     </div>
   );
 }
