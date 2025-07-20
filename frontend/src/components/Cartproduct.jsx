@@ -2,13 +2,19 @@ import React, { useContext, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { cartContext } from "../Context/CartContext";
 import { products } from "../AllProducts";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Cartproduct(props) {
-    const cContext = useContext(cartContext)
-
+  const cContext = useContext(cartContext);
 
   return (
-    <div className="flex justify-between bg-[#2a2a2a] p-4 rounded-lg mb-4">
+    <motion.div
+      layout 
+      className="flex justify-between bg-[#2a2a2a] p-4 rounded-lg mb-4"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, x: 100, transition: { duration: 0.3 } }}
+    >
       <div className="h-28">
         <img src={props.path} alt="img" className="h-28" />
       </div>
@@ -39,7 +45,7 @@ function Cartproduct(props) {
           <MdDelete className="text-2xl" title="delete" />
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

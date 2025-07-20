@@ -37,11 +37,11 @@ function ProductDetail() {
           </div>
           <div className="mt-1">
             <p className="text-lg text-gray-400 pt-6">
-              Original Price:{" "}
+              Original Price:${" "}
               <span className="line-through">Rs. {product.price}</span>
             </p>
             <p className="text-xl font-semibold text-green-500 mt-1">
-              Now: Rs. {product.discountPrice}
+              Now: ${product.discountPrice}
             </p>
           </div>
           <div className="flex flex-col  gap-4 mt-4 pt-8">
