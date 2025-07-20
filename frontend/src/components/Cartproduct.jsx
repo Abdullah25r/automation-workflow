@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { cartContext } from "../Context/CartContext";
+import { products } from "../AllProducts";
 
 function Cartproduct(props) {
     const cContext = useContext(cartContext)
@@ -22,8 +23,8 @@ function Cartproduct(props) {
 
       <div className="mr-44">
         <h2 className="font-semibold font-poppins">{props.name}</h2>
-        <p>{props.price}</p>
-        <div className="flex gap-2 mt-6 bg-[#1a1a1a] px-2 justify-center rounded-md">
+        <p>${props.price}</p>
+        <div className="flex gap-3  mt-6 bg-[#1a1a1a] px-2 justify-center rounded-md w-20">
           <button
             className=" p-1 font-bold py-0  rounded-sm"
             onClick={decreaseCount}
@@ -41,7 +42,7 @@ function Cartproduct(props) {
       </div>
 
       <div className="flex flex-col items-center justify-between mb-5">
-        <p className="text-xl">{props.price}</p>
+        <p className="text-xl">${props.price}</p>
         <button onClick={() => cContext.removeProduct(props.id)}> 
           <MdDelete className="text-2xl" title="delete" />
         </button>
