@@ -12,7 +12,7 @@ function Footer() {
       <div className="px-6 md:px-20 pb-6">
         <div className="flex justify-start mb-10">
           <Link to="/" className="flex items-center">
-            <img src="logo.gif" alt="TimePods Logo" className="h-8" />
+            <img src="./img/logo.gif" alt="TimePods Logo" className="h-8" />
             <span className="font-kanit text-2xl ml-2 text-[#ced4da] hover:text-white transition tracking-wider">
               TimePods
             </span>

@@ -22,7 +22,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4">
         {/* Logo Wrapped in Link */}
         <Link to="/" className="flex items-center">
-          <img src="logo.gif" alt="TimePods Logo" className="h-8" />
+          <img src="./img/logo.gif" alt="TimePods Logo" className="h-8" />
           <span className="font-kanit text-2xl ml-2 text-[#ced4da] hover:text-[#ffffff] transition tracking-wider">
             TimePods
           </span>
