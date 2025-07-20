@@ -10,27 +10,28 @@ import ReturnRefundPolicy from "./components/ReturnRefundPolicy";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
-import ProductDetail from "./components/ProductsComponents/ProductDetail"
+import ProductDetail from "./components/ProductsComponents/ProductDetail";
+import FAQs from "./components/FAQs";
+
 function App() {
   return (
     <div className="min-h-screen text-white bg-black">
       <Navbar />
-
       <div className="max-w-[1430px] mx-auto px-4">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/news" element={<News />} />
           <Route path="/devices" element={<Devices />} />
-          <Route path="/Cart" element={<Cart />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about" element={<AboutTimePods />} />
           <Route path="/return-refund" element={<ReturnRefundPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsAndConditions />} />
+          <Route path="/faqs" element={<FAQs />} />
         </Routes>
       </div>
-
       <Footer />
     </div>
   );
