@@ -35,7 +35,7 @@ function Cartproduct(props) {
 
       <div className="flex flex-col items-center justify-between mb-5">
         <p className="text-xl">${(props.price * props.count).toFixed(2)}</p>
-        <button onClick={() => cContext.removeProduct(props.id)}> 
+        <button onClick={() => cContext.removeProduct(props.id)}>
           <MdDelete className="text-2xl" title="delete" />
         </button>
       </div>
