@@ -10,7 +10,7 @@ import ReturnRefundPolicy from "./components/ReturnRefundPolicy";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
-import ProductDetail from "./components/ProductsComponents/ProductDetail"
+import ProductDetail from "./components/ProductsComponents/ProductDetail";
 function App() {
   return (
     <div className="min-h-screen text-white bg-black">

@@ -1,32 +1,41 @@
 import React, { useContext } from "react";
 import Star from "./Star";
 import { cartContext } from "../Context/CartContext";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
+
 const ProductCard = (props) => {
   const context = useContext(cartContext);
+
   return (
-    <Link to={`product/${props.id}`} className="bg-[#1a1a1a] p-5 mb-10 mt-3 hover:-translate-y-2 transition-all rounded-lg shadow-md hover:shadow-[#1a1a1a] duration-300">
-      <div className="align-items-center flex cursor-pointer -mx-2 flex-col mb-5">
-        <img
-          src={props.path}
-          alt={props.alt}
-          className="h-52  object-contain rounded-md bg-[#2a2a2a] mb-3 "
-        />
-      </div>
-      <div className="description-section">
-        <h2 className="font-poppins font-semibold">{props.name}</h2>
-        <p className="text-wrap w-56 line-clamp-2">{props.desc}</p>
-        <Star />
-      </div>
+    <div className="bg-[#1a1a1a] p-5 mb-10 mt-3 hover:-translate-y-2 transition-all rounded-lg shadow-md hover:shadow-[#1a1a1a] duration-300">
+      {/* Only this portion should navigate to detail page */}
+      <Link to={`/product/${props.id}`}>
+        <div className="align-items-center flex cursor-pointer -mx-2 flex-col mb-5">
+          <img
+            src={props.path}
+            alt={props.alt}
+            className="h-52  object-contain rounded-md bg-[#2a2a2a] mb-3"
+          />
+        </div>
+        <div className="description-section">
+          <h2 className="font-poppins font-semibold">{props.name}</h2>
+          <p className="text-wrap w-56 line-clamp-2">{props.desc}</p>
+          <Star />
+        </div>
+      </Link>
+
+      {/* Add to cart button outside of the Link */}
       <div className="flex justify-between items-center mt-7">
         <span className="font-semibold">{props.price}</span>
         <button
           type="button"
-          class="text-black bg-white text-sm md:px-2 md:py-2 px-1 py-1 text-center inline-flex items-center me-2 border border-[#64748b] rounded-md hover:bg-[#1a1a1a] hover:text-white transition duration-250 ease-in-out font-semibold"
-          onClick={() =>{context.addProduct(props)}}
+          className="text-black bg-white text-sm md:px-2 md:py-2 px-1 py-1 text-center inline-flex items-center me-2 border border-[#64748b] rounded-md hover:bg-[#1a1a1a] hover:text-white transition duration-250 ease-in-out font-semibold"
+          onClick={() => {
+            context.addProduct(props);
+          }}
         >
           <svg
-            class="w-3.5 h-3.5 me-2"
+            className="w-3.5 h-3.5 me-2"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -37,7 +46,7 @@ const ProductCard = (props) => {
           Buy now
         </button>
       </div>
-    </Link>
+    </div>
   );
 };
 
