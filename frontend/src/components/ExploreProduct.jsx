@@ -1,33 +1,53 @@
-import React from "react";
-import ProductCard from "./ProductCard";
-
-const names = ["Vespor Airpuds", "Eclipse Earbuds", "Nova Buds", "Galaxy Pods", "Eclipse Earbuds","Wave Earbuds","Arcade Earbuds","Quantum Earbuds"];
-const description = [
-  "Experience the future of sound with Vespor Airpuds.",
-  "Eclipse Earbuds: Where Style Meets Sound.",
-  "Nova Buds: Your Gateway to Stellar Sound.",
-  "Galaxy Pods: Explore the Universe of Sound.",
-  "Eclipse Earbuds: Where Style Meets Sound.",
-  "Experience the future of sound with Wave Airpuds.",
-  "Arcade Earbuds: Where Style Meets Sound",
-  "Quantum Buds: Your Gateway to Stellar Sound."
-];
-
+import { useEffect, useState } from "react";
+import ProductCard from "./ProductsComponents/ProductCard";
+import { products } from "../AllProducts";
 function Card() {
-  const pods = ["pods1", "pods2", "pods3", "pods4", "pods2","zero-1","zero-2","zero-3"];
+  const [randomProducts, setRandomProducts] = useState([]);
+
+  function getRandomProducts() {
+    const numberOfProductsToSelect = 8;
+
+    if (!products || products.length < numberOfProductsToSelect) {
+      console.warn(`Not enough products in 'products' array to select ${numberOfProductsToSelect} unique items. Displaying all available products.`);
+      setRandomProducts([...products]);
+      return;
+    }
+
+    const selectedProductIds = new Set();
+    const finalSelectedProducts = [];
+
+    while (finalSelectedProducts.length < numberOfProductsToSelect) {
+      const randomIndex = Math.floor(Math.random() * products.length);
+      const product = products[randomIndex];
+      if (product && product.id && !selectedProductIds.has(product.id)) {
+        selectedProductIds.add(product.id);
+        finalSelectedProducts.push(product);
+      }
+    }
+    setRandomProducts(finalSelectedProducts)
+  }
+  useEffect(() => {
+    getRandomProducts();
+  }, []);
 
   return (
     <div className="w-full overflow-x-auto sm:overflow-x-visible">
       <div className="flex flex-nowrap sm:flex-wrap gap-5 px-4 my-4 scroll-smooth sm:justify-center">
-        {pods.map((pod, index) => (
-          <ProductCard
-            key={index}
-            path={`./img/${pod}.webp`}
-            alt={`${pod}`}
-            name={names[index]}
-            desc={description[index]}
-          />
-        ))}
+        {randomProducts.length > 0 ? (
+          randomProducts.map((product) => (
+            <ProductCard
+              key={product.id} 
+              id={product.id} 
+              path={product.image || `./img/${product.image}`}
+              alt={product.name}
+              name={product.name}
+              desc={product.description}
+              price={product.price} 
+            />
+          ))
+        ) : (
+          <p>Loading products or no products available...</p>
+        )}
       </div>
     </div>
   );

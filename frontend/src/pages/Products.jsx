@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ProductsHeader from "../components/ProductsComponents/ProductsHeader";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/ProductsComponents/ProductCard";
 import { products } from "../AllProducts";
 
 function filterProducts(category) {

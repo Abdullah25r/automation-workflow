@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import Star from "./Star";
-import { cartContext } from "../Context/CartContext";
+import Star from "../Star";
+import { cartContext } from "../../Context/CartContext";
 import { Link } from "react-router-dom";
 
 const ProductCard = (props) => {
