@@ -14,7 +14,7 @@ function FAQs() {
         </span>
       </h1>
 
-      {/* 🔲 One big rounded border for all FAQs */}
+
       <div className="bg-gray-900/50 backdrop-blur-md border border-cyan-700 rounded-2xl shadow-lg p-8 space-y-6 text-left text-lg text-gray-300 transition duration-300 hover:shadow-cyan-500/30">
 
         <div>

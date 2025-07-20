@@ -11,11 +11,9 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
-<<<<<<< HEAD
+
 import FAQs from "./components/FAQs";
 
-=======
->>>>>>> be42b5556d980496dbfd95ec8bdc08c471c689f0
 function App() {
   return (
     <div className="min-h-screen text-white bg-black">
