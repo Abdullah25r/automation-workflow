@@ -7,6 +7,9 @@ module.exports = {
         kanit: ['Kanit', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
       },
+      screens: {
+        laptop: '976px', // Custom breakpoint for tablet-to-laptop range
+      },
     },
   },
   plugins: [
