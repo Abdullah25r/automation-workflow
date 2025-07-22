@@ -3,8 +3,17 @@ import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi"; // Cart Icon
 import { Link } from "react-router-dom";
 import Cart from "../pages/Cart";
+import { useContext } from "react";
+import { cartContext } from "../Context/CartContext";
+
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const cartProduct = useContext(cartContext);
+  const cartCount = cartProduct.items.reduce(
+    (acc, item) => acc + item.count,
+    0
+  );
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -63,13 +72,21 @@ function Navbar() {
           </button>
 
           {/* Cart Icon */}
-          <button
-            onClick={handleOpenCart} // Call the function to open the cart
-            className="text-2xl hover:text-[#ffffff] transition hover:bg-[#1a1a1a] p-2 rounded-md"
-            aria-label="Open Cart"
-          >
-            <FiShoppingCart />
-          </button>
+          <div className="relative">
+            <button
+              onClick={handleOpenCart}
+              className="text-2xl hover:text-[#ffffff] transition hover:bg-[#1a1a1a] p-2 rounded-md"
+              aria-label="Open Cart"
+            >
+              <FiShoppingCart />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-white text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center cart-badge">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+          </div>
+
           <Cart isOpen={isCartOpen} onClose={handleCloseCart} />
         </div>
 

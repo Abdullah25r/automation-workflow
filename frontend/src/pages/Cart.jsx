@@ -5,6 +5,7 @@ import Cartproduct from "../components/Cartproduct";
 import { cartContext } from "../Context/CartContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Cart({ isOpen, onClose }) {
   const cartProduct = useContext(cartContext);
@@ -78,12 +79,14 @@ function Cart({ isOpen, onClose }) {
             {/* CheckOut section */}
             <div className="sticky bottom-0 bg-[#2a2a2a] rounded-lg flex justify-between px-4 py-2 m-1">
               <h2 className="font-semibold text-[#ffffff] font-poppins mt-2 text-lg ml-5">
-                Total:{" "}$
+                Total: $
                 {cartProduct.items
                   .reduce((acc, item) => acc + item.price * item.count, 0)
                   .toFixed(2)}
               </h2>
-              <button className="bg-white font-semibold font-poppins text-black px-7 transition-all duration-200 py-1 rounded-lg text-2xl border border-transparent hover:bg-[#2a2a2a] hover:border-[#ced4da] hover:text-white">CHECKOUT</button>
+              <button className="bg-white font-semibold font-poppins text-black px-7 transition-all duration-200 py-1 rounded-lg text-2xl border border-transparent hover:bg-[#2a2a2a] hover:border-[#ced4da] hover:text-white">
+                CHECKOUT
+              </button>
             </div>
           </motion.div>
         </motion.div>
