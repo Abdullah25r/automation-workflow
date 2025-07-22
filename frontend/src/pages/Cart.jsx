@@ -77,14 +77,14 @@ function Cart({ isOpen, onClose }) {
               </AnimatePresence>
             </div>
             {/* CheckOut section */}
-            <div className="sticky bottom-0 bg-[#2a2a2a] rounded-lg flex justify-between px-4 py-2 m-1">
+            <div className="sticky bottom-0 bg-[#2a2a2a] rounded-lg flex justify-between px-4 py-2 m-3">
               <h2 className="font-semibold text-[#ffffff] font-poppins mt-2 text-lg ml-5">
                 Total: $
                 {cartProduct.items
                   .reduce((acc, item) => acc + item.price * item.count, 0)
                   .toFixed(2)}
               </h2>
-              <button className="bg-white font-semibold font-poppins text-black px-7 transition-all duration-200 py-1 rounded-lg text-2xl border border-transparent hover:bg-[#2a2a2a] hover:border-[#ced4da] hover:text-white">
+              <button className="bg-white font-semibold font-poppins text-black px-7 transition-all duration-200 py-2 rounded-lg text-2xl border border-transparent hover:bg-[#2a2a2a] hover:border-[#ced4da] hover:text-white">
                 CHECKOUT
               </button>
             </div>
