@@ -29,7 +29,7 @@ const ProductCard = (props) => {
         <span className="font-semibold">${props.price}</span>
         <button
           type="button"
-          className="text-black bg-white text-sm md:px-2 md:py-2 px-1 py-1 text-center inline-flex items-center me-2 border border-[#64748b] rounded-md hover:bg-[#1a1a1a] hover:text-white transition duration-250 ease-in-out font-semibold"
+          className="text-black bg-white text-sm px-3 py-2 text-center inline-flex items-center me-2 border border-[#64748b] rounded-md hover:bg-[#1a1a1a] hover:text-white transition duration-250 ease-in-out font-semibold md:px-2 md:py-2"
           onClick={() => {
             context.addProduct(props);
           }}
