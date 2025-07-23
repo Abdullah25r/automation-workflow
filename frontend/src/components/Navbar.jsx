@@ -10,7 +10,10 @@ function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const cartProduct = useContext(cartContext);
-  const cartCount = cartProduct.items.reduce((acc, item) => acc + item.count, 0);
+  const cartCount = cartProduct.items.reduce(
+    (acc, item) => acc + item.count,
+    0
+  );
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const handleOpenCart = () => setIsCartOpen(true);
@@ -21,7 +24,11 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex justify-between items-center py-3 md:py-4 laptop:py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src="./img/logo.gif" alt="TimePods Logo" className="h-6 sm:h-7 laptop:h-8" />
+          <img
+            src="./img/logo.gif"
+            alt="TimePods Logo"
+            className="h-6 sm:h-7 laptop:h-8"
+          />
           <span className="font-kanit text-lg sm:text-xl laptop:text-2xl ml-2 text-[#ced4da] hover:text-[#ffffff] transition tracking-wider">
             TimePods
           </span>
@@ -29,10 +36,30 @@ function Navbar() {
 
         {/* Desktop Nav (Visible >= 977px) */}
         <nav className="hidden laptop:flex gap-6 text-sm laptop:text-[16px] font-poppins font-medium">
-          <Link to="/" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Home</Link>
-          <Link to="/Products" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Products</Link>
-          <Link to="/devices" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Smart Watches</Link>
-          <Link to="/news" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Accessories</Link>
+          <Link
+            to="/"
+            className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+          >
+            Home
+          </Link>
+          <Link
+            to="/Products"
+            className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+          >
+            Products
+          </Link>
+          <Link
+            to="/devices"
+            className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+          >
+            Smart Watches
+          </Link>
+          <Link
+            to="/news"
+            className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+          >
+            Accessories
+          </Link>
         </nav>
 
         {/* Action Buttons */}
@@ -72,29 +99,60 @@ function Navbar() {
       {/* Mobile Menu */}
       <div
         className={`laptop:hidden bg-[#111111] px-6 pt-1 pb-2 space-y-1 rounded-lg font-poppins transition-all duration-300 ease-in-out transform ${
-          menuOpen ? "max-h-96 opacity-100 scale-y-100" : "max-h-0 opacity-0 scale-y-0"
+          menuOpen
+            ? "max-h-96 opacity-100 scale-y-100"
+            : "max-h-0 opacity-0 scale-y-0"
         } overflow-hidden origin-top text-sm`}
       >
-        <Link to="/" onClick={() => setMenuOpen(false)} className="block hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Home</Link>
-        <Link to="/Products" onClick={() => setMenuOpen(false)} className="block hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Products</Link>
-        <Link to="/devices" onClick={() => setMenuOpen(false)} className="block hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Smart Watches</Link>
-        <Link to="/news" onClick={() => setMenuOpen(false)} className="block hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Accessories</Link>
-        <button
+        <Link
+          to="/"
           onClick={() => setMenuOpen(false)}
-          className="w-full border border-[#64748b] rounded-md py-1 text-sm hover:bg-white hover:text-black transition font-semibold"
+          className="block hover:text-white transition hover:bg-[#1a1a1a] p-2 text-center rounded-md"
         >
-          Sign In
-        </button>
-        <div className="flex justify-center pt-2">
-          <button onClick={handleOpenCart} className="text-xl p-2 rounded-md hover:text-white">
-            <FiShoppingCart />
-            {cartCount > 0 && (
-              <span className="absolute mt-[-10px] ml-3 bg-white text-black text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
+          Home
+        </Link>
+        <Link
+          to="/Products"
+          onClick={() => setMenuOpen(false)}
+          className="block hover:text-white transition hover:bg-[#1a1a1a] p-2 text-center rounded-md"
+        >
+          Products
+        </Link>
+        <Link
+          to="/devices"
+          onClick={() => setMenuOpen(false)}
+          className="block hover:text-white transition hover:bg-[#1a1a1a] text-center p-2 rounded-md"
+        >
+          Smart Watches
+        </Link>
+        <Link
+          to="/news"
+          onClick={() => setMenuOpen(false)}
+          className="block hover:text-white transition hover:bg-[#1a1a1a] text-center p-2 rounded-md"
+        >
+          Accessories
+        </Link>
+        <div className="flex justify-center gap-10  text-sm laptop:text-base font-poppins font-medium">
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="border border-[#64748b] rounded-md text-sm hover:bg-white hover:text-black transition font-semibold sm:px-12 px-3 "
+          >
+            Sign In
           </button>
-          <Cart isOpen={isCartOpen} onClose={handleCloseCart} />
+          <div className="flex justify-center pt-2">
+            <button
+              onClick={handleOpenCart}
+              className="text-xl p-2 rounded-md hover:text-white"
+            >
+              <FiShoppingCart />
+              {cartCount > 0 && (
+                <span className="absolute mt-[-10px] ml-3 bg-white text-black text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+            <Cart isOpen={isCartOpen} onClose={handleCloseCart} />
+          </div>
         </div>
       </div>
     </header>
