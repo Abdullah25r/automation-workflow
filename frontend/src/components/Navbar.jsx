@@ -4,10 +4,13 @@ import { FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import Cart from "../pages/Cart";
 import { cartContext } from "../Context/CartContext";
+import MobileCart from "../pages/MobileCart";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const navigate = useNavigate();
 
   const cartProduct = useContext(cartContext);
   const cartCount = cartProduct.items.reduce((acc, item) => acc + item.count, 0);
@@ -89,7 +92,10 @@ function Navbar() {
           Sign In
         </button>
         <div className="flex justify-center pt-2">
-          <button onClick={handleOpenCart} className="text-xl p-2 rounded-md hover:text-white">
+          <button onClick={() => 
+            { navigate("/mobile-cart");
+              setMenuOpen(false);
+            }} className="text-xl p-2 rounded-md hover:text-white">
             <FiShoppingCart />
             {cartCount > 0 && (
               <span className="absolute mt-[-10px] ml-3 bg-white text-black text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
@@ -97,7 +103,7 @@ function Navbar() {
               </span>
             )}
           </button>
-          <Cart isOpen={isCartOpen} onClose={handleCloseCart} />
+
         </div>
       </div>
     </header>

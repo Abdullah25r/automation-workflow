@@ -11,6 +11,7 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
+import MobileCart from "./pages/MobileCart";
 
 
 import FAQs from "./components/FAQs";
@@ -32,6 +33,7 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsAndConditions />} />
           <Route path="/faqs" element={<FAQs />} />
+          <Route path="/mobile-cart" element={<MobileCart />} />
 
 
         </Routes>
