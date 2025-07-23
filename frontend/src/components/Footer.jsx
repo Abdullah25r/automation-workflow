@@ -46,13 +46,13 @@ function Footer() {
           <div>
             <h2 className="font-semibold text-lg mb-4">Subscribe our Newsletter</h2>
             <p className="text-sm mb-2 text-gray-300">Get the latest offers and promotions!</p>
-            <div className="flex mt-2">
+            <div className="flex mt-2 bg-white rounded-md">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="p-2 text-black w-full rounded-l-md outline-none"
+                className="p-2 text-black w-full rounded-md outline-none"
               />
-              <button className="bg-black text-white border border-white px-4 py-2 rounded-r-md hover:bg-gray-900 transition">
+              <button className="bg-black text-white border font-semibold rounded-md border-white px-4 py-2 rounded-r-md hover:bg-gray-900 transition">
                 SUBMIT
               </button>
             </div>
