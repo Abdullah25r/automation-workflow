@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { HiOutlineX } from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi";
 import Cartproduct from "../components/Cartproduct";
@@ -10,45 +10,50 @@ function MobileCart() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 bg-[#1a1a1a] text-white flex flex-col">
+    <div className="fixed inset-0 bg-[#1a1a1a] text-white flex flex-col z-50">
       {/* Header */}
-      <div className="flex justify-between items-center px-4 py-3 bg-[#2a2a2a]">
+      <div className="flex justify-between items-center px-4 py-3 bg-[#2a2a2a] shadow-md">
         <div className="flex items-center gap-2">
           <FiShoppingCart className="text-2xl" />
-          <p className="text-xl font-semibold">Cart</p>
+          <p className="text-lg font-semibold">Cart</p>
         </div>
-        <button onClick={() => navigate(-1)}>
+        <button onClick={() => navigate(-1)} className="text-white">
           <HiOutlineX className="text-2xl" />
         </button>
       </div>
 
       {/* Items */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-[#1a1a1a]">
-        {cartProduct.items.map((item, index) => (
-          <Cartproduct
-            key={index}
-            name={item.name}
-            path={item.path}
-            price={item.price}
-            id={item.id}
-            count={item.count}
-          />
-        ))}
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-[#1a1a1a]">
+        {cartProduct.items.length === 0 ? (
+          <p className="text-center text-sm mt-10">Your cart is empty.</p>
+        ) : (
+          cartProduct.items.map((item, index) => (
+            <Cartproduct
+              key={index}
+              name={item.name}
+              path={item.path}
+              price={item.price}
+              id={item.id}
+              count={item.count}
+            />
+          ))
+        )}
       </div>
 
       {/* Checkout */}
-      <div className="p-3 bg-[#2a2a2a] flex justify-between items-center">
+      <div className="sticky bottom-0 bg-[#2a2a2a] px-4 py-3 border-t border-[#333] flex justify-between items-center shadow-inner">
         <span className="text-base font-medium">
           Total: $
           {cartProduct.items
             .reduce((acc, item) => acc + item.price * item.count, 0)
             .toFixed(2)}
         </span>
-        <button className="bg-white text-black px-4 py-2 rounded-md text-sm font-semibold hover:bg-[#2a2a2a] hover:text-white border border-transparent hover:border-white transition">
+        <button className="bg-white text-black px-5 py-2 text-sm font-semibold rounded-md transition hover:bg-[#2a2a2a] hover:text-white hover:border-white border border-transparent">
           Checkout
         </button>
       </div>
     </div>
   );
 }
+
 export default MobileCart;
