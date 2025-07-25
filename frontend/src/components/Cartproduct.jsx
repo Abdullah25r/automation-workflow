@@ -1,48 +1,107 @@
 import React, { useContext } from "react";
 import { MdDelete } from "react-icons/md";
 import { cartContext } from "../Context/CartContext";
-import { motion} from "framer-motion";
+import { motion } from "framer-motion";
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.3 },
+  },
+  exit: {
+    opacity: 0,
+    x: 100, //  Slide to the right on exit
+    transition: { duration: 0.25 },
+  },
+};
 
 function Cartproduct(props) {
   const cContext = useContext(cartContext);
 
   return (
     <motion.div
-      layout 
-      className="flex justify-between bg-[#2a2a2a] p-4 rounded-lg mb-3 h-36"
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, x: 100, transition: { duration: 0.3 } }}
+      layout // Makes animation smooth when layout shifts
+      variants={itemVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="flex flex-col sm:flex-row items-stretch justify-between bg-[#2a2a2a] p-3 rounded-lg mb-3 gap-2 sm:gap-1 relative"
     >
-      <div className="mr-2 w-32 rounded-lg">
-        <img src={props.path} alt="img" className="rounded-lg" />
+      {/* Mobile Total Price */}
+      <div className="sm:hidden absolute top-3 right-3 flex flex-col items-end mb-2">
+        <p className="text-sm font-medium text-gray-100">
+          ${(props.price * props.count).toFixed(2)}
+        </p>
       </div>
 
-      <div className="flex flex-col justify-between w-32 mr-20">
-        <h2 className="font-semibold font-poppins">{props.name}</h2>
-        <p>${props.price}</p>
-        <div className="flex gap-3  mt-6 bg-[#1a1a1a] px-2 justify-center rounded-md w-20">
+      {/* Product Image and Info */}
+      <div className="flex items-center flex-1 min-w-0 gap-3 mt-4 sm:mt-0">
+        <div className="w-14 h-14 sm:w-20 sm:h-20 flex-shrink-0">
+          <img
+            src={props.path}
+            alt={props.name}
+            className="w-full h-full object-cover rounded-lg"
+          />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <h2 className="font-medium font-poppins text-gray-100 line-clamp-2 text-sm sm:text-base">
+            {props.name}
+          </h2>
+          <p className="text-gray-400 text-xs sm:text-sm">${props.price}</p>
+        </div>
+      </div>
+
+      {/* Bottom Row */}
+      <div className="flex items-center justify-between mt-2 sm:mt-0 sm:ml-5">
+        {/* Quantity Controls */}
+        <motion.div
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center border border-gray-600 rounded-md text-xs sm:text-base"
+        >
           <button
-            className=" p-1 font-bold py-0  rounded-sm"
+            className="px-2 py-0.5 text-gray-300 hover:bg-gray-700 transition-colors"
             onClick={() => cContext.decreaseCount(props.id)}
           >
             -
           </button>
-          <p>{props.count}</p>
+          <span className="px-2 py-0.5 text-gray-100 border-x border-gray-600">
+            {props.count}
+          </span>
           <button
-            className=" p-1 font-bold py-0 rounded-sm "
+            className="px-2 py-0.5 text-gray-300 hover:bg-gray-700 transition-colors"
             onClick={() => cContext.increaseCount(props.id)}
           >
             +
           </button>
-        </div>
-      </div>
+        </motion.div>
 
-      <div className="flex flex-col items-center justify-between mb-5">
-        <p className="text-xl">${(props.price * props.count).toFixed(2)}</p>
-        <button onClick={() => cContext.removeProduct(props.id)}>
-          <MdDelete className="text-2xl" title="delete" />
-        </button>
+        {/* Mobile Delete Button */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => cContext.removeProduct(props.id)}
+          className="sm:hidden text-gray-400 hover:text-red-500 transition-colors p-1 ml-3"
+        >
+          <MdDelete className="text-lg" title="Delete item" />
+        </motion.button>
+
+        {/* Desktop Price and Delete */}
+        <div className="hidden sm:flex items-center ml-8 w-40 justify-end gap-4">
+          <p className="text-lg font-medium text-gray-100">
+            ${(props.price * props.count).toFixed(2)}
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => cContext.removeProduct(props.id)}
+            className="text-gray-400 hover:text-red-500 transition-colors p-1"
+          >
+            <MdDelete className="text-xl" title="Delete item" />
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );
