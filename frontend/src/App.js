@@ -11,7 +11,13 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
+<<<<<<< HEAD
 import Dashboard from "./pages/Dashboard"; 
+=======
+import MobileCart from "./pages/MobileCart";
+
+
+>>>>>>> cfec5ce053db41f61b8638d5609ae58a3b3e3cc8
 import FAQs from "./components/FAQs";
 
 function App() {
@@ -34,7 +40,13 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsAndConditions />} />
           <Route path="/faqs" element={<FAQs />} />
+<<<<<<< HEAD
           <Route path="/dashboard" element={<Dashboard />} />
+=======
+          <Route path="/mobile-cart" element={<MobileCart />} />
+
+
+>>>>>>> cfec5ce053db41f61b8638d5609ae58a3b3e3cc8
         </Routes>
       </div>
       {!hideLayout && <Footer />}
