@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { products } from "../../AllProducts";
 import ProductReviews from "./ProductReviews";
-
+import {cartContext} from '../../Context/CartContext'
 function ProductDetail() {
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
-
+  const context = useContext(cartContext);
   if (!product) {
     return <div className="p-4">Product not found.</div>;
   }
@@ -54,6 +54,7 @@ function ProductDetail() {
             <button
               type="button"
               className="border border-green-600 text-green-500 hover:bg-green-600 hover:text-white font-semibold px-6 py-2 rounded-lg transition"
+              onClick={context.addProduct(product)}
             >
               Add to Cart
             </button>

@@ -1,8 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { MdDelete } from "react-icons/md";
 import { cartContext } from "../Context/CartContext";
-import { products } from "../AllProducts";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion} from "framer-motion";
 
 function Cartproduct(props) {
   const cContext = useContext(cartContext);

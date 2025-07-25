@@ -18,7 +18,7 @@ function Products(props) {
   return (
     <div>
       <ProductsHeader onCategorySelect={setCategory} />
-      <div className="flex flex-wrap gap-5 px-4 my-4 justify-center items-center">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 my-4">
         {filterProducts(category).map((product,index) => (
           <ProductCard
             key={index}

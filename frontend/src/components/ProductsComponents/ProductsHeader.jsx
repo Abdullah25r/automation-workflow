@@ -1,6 +1,3 @@
-import React from "react";
-import { products } from "../../AllProducts";
-
 
 
 function ProductsHeader({ onCategorySelect }) {
