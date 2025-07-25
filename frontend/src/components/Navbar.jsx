@@ -4,7 +4,6 @@ import { FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import Cart from "../pages/Cart";
 import { cartContext } from "../Context/CartContext";
-import MobileCart from "../pages/MobileCart";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {

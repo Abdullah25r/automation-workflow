@@ -5,7 +5,6 @@ import Cartproduct from "../components/Cartproduct";
 import { cartContext } from "../Context/CartContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 
 function Cart({ isOpen, onClose }) {
   const cartProduct = useContext(cartContext);

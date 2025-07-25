@@ -1,12 +1,9 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext} from "react";
 import { HiOutlineX } from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi";
 import Cartproduct from "../components/Cartproduct";
 import { cartContext } from "../Context/CartContext";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 function MobileCart() {
   const cartProduct = useContext(cartContext);
