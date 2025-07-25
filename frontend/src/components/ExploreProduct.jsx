@@ -46,7 +46,7 @@ function Card() {
             />
           ))
         ) : (
-          <p>Loading products or no products available...</p>
+          <p>Loading products or no product available...</p>
         )}
       </div>
     </div>
