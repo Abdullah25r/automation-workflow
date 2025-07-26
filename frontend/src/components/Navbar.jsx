@@ -5,7 +5,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import Cart from "../pages/Cart";
 import { cartContext } from "../Context/CartContext";
-
+import {ShoppingBag} from 'lucide-react'
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -84,7 +84,7 @@ function Navbar() {
               className="text-2xl hover:text-white p-2"
               aria-label="Open Cart"
             >
-              <FiShoppingCart />
+              <ShoppingBag />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cartCount}

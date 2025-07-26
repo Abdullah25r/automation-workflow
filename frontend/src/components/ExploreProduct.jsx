@@ -5,7 +5,7 @@ function Card() {
   const [randomProducts, setRandomProducts] = useState([]);
 
   function getRandomProducts() {
-    const numberOfProductsToSelect = 8;
+    const numberOfProductsToSelect = 6;
 
     if (!products || products.length < numberOfProductsToSelect) {
       console.warn(`Not enough products in 'products' array to select ${numberOfProductsToSelect} unique items. Displaying all available products.`);
