@@ -13,13 +13,16 @@ const ProductCard = (props) => {
           <img
             src={props.path}
             alt={props.alt}
-            className="h-40 sm:h-52 object-contain rounded-md bg-[#2a2a2a] mb-3"
+            className="h-40 sm:h-52 object-contain rounded-md bg-[#2a2a2a] mb-3 sm:mb-1"
           />
         </div>
         <div className="description-section text-center">
           <h2 className="font-poppins font-semibold text-base text-white">{props.name}</h2>
           <p className="text-sm text-gray-300 line-clamp-2 hidden sm:block">{props.desc}</p>
+          <div className="hidden sm:block">
+
           <Star />
+          </div>
         </div>
       </Link>
 

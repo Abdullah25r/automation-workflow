@@ -32,7 +32,8 @@ function Card() {
 
   return (
     <div className="w-full overflow-x-auto sm:overflow-x-visible">
-      <div className="flex flex-nowrap sm:flex-wrap gap-5 px-4 my-4 scroll-smooth sm:justify-center">
+      <div className="flex flex-nowrap sm:flex-wrap gap-5 sm:gap-0 px-4
+      sm:px-1 my-4 scroll-smooth sm:justify-center">
         {randomProducts.length > 0 ? (
           randomProducts.map((product) => (
             <ProductCard
