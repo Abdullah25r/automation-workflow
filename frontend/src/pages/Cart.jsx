@@ -5,7 +5,7 @@ import Cartproduct from "../components/Cartproduct";
 import { cartContext } from "../Context/CartContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 function Cart({ isOpen, onClose }) {
   const cartProduct = useContext(cartContext);
   const cartRef = useRef();
@@ -19,15 +19,22 @@ function Cart({ isOpen, onClose }) {
   // Disable background scroll when cart is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // Disable background scroll
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; // Restore scroll
+      document.body.style.overflow = "auto";
     }
 
     return () => {
       document.body.style.overflow = "auto"; // Clean up
     };
   }, [isOpen]);
+
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    onClose();
+    navigate("/checkout");
+  };
 
   return (
     <AnimatePresence>
@@ -83,7 +90,9 @@ function Cart({ isOpen, onClose }) {
                   .reduce((acc, item) => acc + item.price * item.count, 0)
                   .toFixed(2)}
               </h2>
-              <button className="bg-white font-semibold font-poppins text-black px-7 transition-all duration-200 py-2 rounded-lg text-2xl border border-transparent hover:bg-[#2a2a2a] hover:border-[#ced4da] hover:text-white">
+              <button className="bg-white font-semibold font-poppins text-black px-7 transition-all duration-200 py-2 rounded-lg text-2xl border border-transparent hover:bg-[#2a2a2a] hover:border-[#ced4da] hover:text-white"
+              onClick={handleCheckout}
+              >
                 CHECKOUT
               </button>
             </div>

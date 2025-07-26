@@ -13,16 +13,17 @@ import Cart from "./pages/Cart";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
 import Dashboard from "./pages/Dashboard"; 
 import MobileCart from "./pages/MobileCart";
-
+import Checkout from './pages/Checkout'
 import FAQs from "./components/FAQs";
 
 function App() {
   const location = useLocation();
   const hideLayout = location.pathname.startsWith("/dashboard");
+  const hidecheckoutnav = location.pathname.startsWith("/checkout");
 
   return (
     <div className="min-h-screen text-white bg-black">
-      {!hideLayout && <Navbar />}
+      {!hideLayout && !hidecheckoutnav && <Navbar />}
       <div className="max-w-[1430px] mx-auto px-4">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -37,9 +38,9 @@ function App() {
           <Route path="/terms-conditions" element={<TermsAndConditions />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/dashboard" element={<Dashboard />} />
-
           <Route path="/mobile-cart" element={<MobileCart />} />
-
+          <Route path="/checkout" element={<Checkout/>} />
+          
 
         </Routes>
       </div>
