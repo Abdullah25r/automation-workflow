@@ -224,7 +224,7 @@ const Checkout = () => {
                 to="/cart"
                 className="block text-center bg-[#2a2a2a] border border-[#3a3a3a] text-white font-semibold py-3 rounded-lg hover:bg-[#333] transition transform hover:-translate-y-0.5 active:translate-y-0"
               >
-                Back to Cart
+                Continue Shopping
               </Link>
             </div>
           </div>
