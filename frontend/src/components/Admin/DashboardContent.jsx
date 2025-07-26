@@ -3,6 +3,7 @@ import React from "react";
 import { products } from "../../AllProducts";
 import ProductList from "./ProductList";
 import Main from "./Main";
+import OrdersTable from "./Orders/OrdersTable";
 
 const DashboardContent = ({ selected }) => {
   const lowerSelected = selected.toLowerCase();
@@ -24,7 +25,7 @@ const DashboardContent = ({ selected }) => {
         return <ProductList data={filtered} title={selected} />;
       }
       case "orders":
-        return;
+        return <OrdersTable/>;
       case "customers":
         return;
       case 'analytics':

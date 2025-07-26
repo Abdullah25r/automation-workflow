@@ -3,14 +3,22 @@ import { useParams } from "react-router-dom";
 import { products } from "../../AllProducts";
 import ProductReviews from "./ProductReviews";
 import {cartContext} from '../../Context/CartContext'
+import {useNavigate} from 'react-router-dom'
 function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const product = products.find((p) => p.id === parseInt(id));
   const context = useContext(cartContext);
   if (!product) {
     return <div className="p-4">Product not found.</div>;
   }
-
+  
+  
+    const handleCheckout = (product) => {
+      context.addProduct(product)
+      navigate("/checkout");
+    };
   return (
     <div>
       <div className="container mx-auto p-4 my-10 flex flex-col md:flex-row md:space-x-10">
@@ -46,6 +54,7 @@ function ProductDetail() {
           </div>
           <div className="flex flex-col  gap-4 mt-4 pt-8">
             <button
+              onClick={()=> handleCheckout(product)}
               type="button"
               className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition"
             >
@@ -54,7 +63,7 @@ function ProductDetail() {
             <button
               type="button"
               className="border border-green-600 text-green-500 hover:bg-green-600 hover:text-white font-semibold px-6 py-2 rounded-lg transition"
-              onClick={context.addProduct(product)}
+              onClick={()=> context.addProduct(product)}
             >
               Add to Cart
             </button>

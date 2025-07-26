@@ -11,8 +11,8 @@ function filterProducts(category) {
     return product.category === category;
   });
 }
-
 function Products(props) {
+  
   const [category, setCategory] = useState("all");
 
   return (

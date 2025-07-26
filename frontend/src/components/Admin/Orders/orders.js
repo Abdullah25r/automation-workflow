@@ -1,0 +1,42 @@
+export const orders = [
+  {
+    id: 1001,
+    customerName: "Ali Raza",
+    customerEmail: "ali.raza@example.com",
+    date: "2025-07-24",
+    status: "Delivered",
+    total: 14999,
+  },
+  {
+    id: 1002,
+    customerName: "Fatima Noor",
+    customerEmail: "fatima.noor@example.com",
+    date: "2025-07-22",
+    status: "Pending",
+    total: 8999,
+  },
+  {
+    id: 1003,
+    customerName: "Usman Ahmed",
+    customerEmail: "usman.ahmed@example.com",
+    date: "2025-07-20",
+    status: "Shipped",
+    total: 12999,
+  },
+  {
+    id: 1004,
+    customerName: "Sara Khan",
+    customerEmail: "sara.khan@example.com",
+    date: "2025-07-18",
+    status: "Cancelled",
+    total: 6999,
+  },
+  {
+    id: 1005,
+    customerName: "Bilal Siddiqui",
+    customerEmail: "bilal.s@example.com",
+    date: "2025-07-16",
+    status: "Delivered",
+    total: 19999,
+  },
+];
