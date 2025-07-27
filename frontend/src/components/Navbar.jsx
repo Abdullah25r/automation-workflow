@@ -1,15 +1,19 @@
-import React, { useState, useContext } from "react";
-import {  HiOutlineX } from "react-icons/hi";
+import React, { useState, useContext, useRef, useEffect } from "react";
+import { HiOutlineX } from "react-icons/hi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FiShoppingCart } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import Cart from "../pages/Cart";
 import { cartContext } from "../Context/CartContext";
-import {ShoppingBag} from 'lucide-react'
+import { ShoppingBag } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
+  const menuRef = useRef();
+  const hamburgerRef = useRef();
 
   const cartProduct = useContext(cartContext);
   const cartCount = cartProduct.items.reduce((acc, item) => acc + item.count, 0);
@@ -18,24 +22,114 @@ function Navbar() {
   const handleOpenCart = () => setIsCartOpen(true);
   const handleCloseCart = () => setIsCartOpen(false);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        menuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        hamburgerRef.current &&
+        !hamburgerRef.current.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
+
+  // Animation variants
+  const menuContainerVariants = {
+    hidden: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        when: "afterChildren",
+        staggerChildren: 0.05,
+        staggerDirection: -1,
+        duration: 0.2
+      }
+    },
+    visible: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+        delayChildren: 0.01,
+        duration: 0.2
+      }
+    }
+  };
+
+  const menuItemVariants = {
+    hidden: {
+      opacity: 0,
+      x: -20,
+      transition: { duration: 0.2 }
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+        duration: 0.2
+      }
+    }
+  };
+
+  const iconVariants = {
+    open: { rotate: 180, scale: 1.1 },
+    closed: { rotate: 0, scale: 1 }
+  };
+
   return (
     <header className="sticky top-2 z-50 bg-gradient-to-r from-[#1a1a1a] to-[#000000] text-[#ced4da] px-4 sm:px-6 md:px-6 shadow-md laptop:mx-7 rounded-xl mx-2">
       <div className="max-w-7xl mx-auto py-3 md:py-4 laptop:py-4">
-
         {/* Desktop View */}
         <div className="hidden laptop:flex justify-between items-center">
           <Link to="/" className="flex items-center">
-            <img src="./img/logo.gif" alt="TimePods Logo" className="h-6 sm:h-7 laptop:h-8" />
+            <img
+              src="./img/logo.gif"
+              alt="TimePods Logo"
+              className="h-6 sm:h-7 laptop:h-8"
+            />
             <span className="font-kanit text-lg sm:text-xl laptop:text-2xl ml-2 text-[#ced4da] hover:text-[#ffffff] transition tracking-wider">
               TimePods
             </span>
           </Link>
 
           <nav className="flex gap-6 text-sm laptop:text-[16px] font-poppins font-medium">
-            <Link to="/" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Home</Link>
-            <Link to="/Products" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Products</Link>
-            <Link to="/devices" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Smart Watches</Link>
-            <Link to="/news" className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md">Accessories</Link>
+            <Link
+              to="/"
+              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+            >
+              Home
+            </Link>
+            <Link
+              to="/Products"
+              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+            >
+              Products
+            </Link>
+            <Link
+              to="/devices"
+              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+            >
+              Smart Watches
+            </Link>
+            <Link
+              to="/news"
+              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+            >
+              Accessories
+            </Link>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -62,19 +156,26 @@ function Navbar() {
 
         {/* Mobile View */}
         <div className="laptop:hidden flex items-center justify-between">
-          
-          <button
+          <motion.button
+            ref={hamburgerRef}
             onClick={toggleMenu}
             className="text-2xl hover:text-white p-2"
             aria-label="Toggle Menu"
+            animate={menuOpen ? "open" : "closed"}
+            variants={iconVariants}
+            transition={{ duration: 0.3 }}
           >
-            {menuOpen ? <HiOutlineX /> : <RxHamburgerMenu />
-}
-          </button>
+            {menuOpen ? <HiOutlineX /> : <RxHamburgerMenu />}
+          </motion.button>
 
-          <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center">
+          <Link
+            to="/"
+            className="absolute left-1/2 -translate-x-1/2 flex items-center"
+          >
             <img src="./img/logo.gif" alt="Logo" className="h-6 sm:h-7" />
-            <span className="font-kanit text-lg ml-2 text-[#ced4da]">TimePods</span>
+            <span className="font-kanit text-lg ml-2 text-[#ced4da]">
+              TimePods
+            </span>
           </Link>
 
           {/* Cart Icon on Right */}
@@ -95,18 +196,75 @@ function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <nav className="laptop:hidden mt-4 flex flex-col space-y-2 text-sm font-medium font-poppins">
-            <Link to="/" className="hover:text-white transition p-2 rounded-md" onClick={toggleMenu}>Home</Link>
-            <Link to="/Products" className="hover:text-white transition p-2 rounded-md" onClick={toggleMenu}>Products</Link>
-            <Link to="/devices" className="hover:text-white transition p-2 rounded-md" onClick={toggleMenu}>Smart Watches</Link>
-            <Link to="/news" className="hover:text-white transition p-2 rounded-md" onClick={toggleMenu}>Accessories</Link>
-            <button className="border border-[#64748b] py-1 rounded-md hover:bg-white hover:text-black transition font-semibold" onClick={() => { toggleMenu(); navigate("/signin"); }}>
-              Sign In
-            </button>
-          </nav>
-        )}
+        {/* Animated Mobile Menu */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              ref={menuRef}
+              className="laptop:hidden overflow-hidden"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={menuContainerVariants}
+            >
+              <motion.nav 
+                className="flex flex-col space-y-2 text-sm font-medium font-poppins pt-2 pb-4"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1 }
+                }}
+              >
+                <motion.div variants={menuItemVariants}>
+                  <Link
+                    to="/"
+                    className="block hover:text-white transition p-2 rounded-md"
+                    onClick={toggleMenu}
+                  >
+                    Home
+                  </Link>
+                </motion.div>
+                <motion.div variants={menuItemVariants}>
+                  <Link
+                    to="/Products"
+                    className="block hover:text-white transition p-2 rounded-md"
+                    onClick={toggleMenu}
+                  >
+                    Products
+                  </Link>
+                </motion.div>
+                <motion.div variants={menuItemVariants}>
+                  <Link
+                    to="/devices"
+                    className="block hover:text-white transition p-2 rounded-md"
+                    onClick={toggleMenu}
+                  >
+                    Smart Watches
+                  </Link>
+                </motion.div>
+                <motion.div variants={menuItemVariants}>
+                  <Link
+                    to="/news"
+                    className="block hover:text-white transition p-2 rounded-md"
+                    onClick={toggleMenu}
+                  >
+                    Accessories
+                  </Link>
+                </motion.div>
+                <motion.div variants={menuItemVariants}>
+                  <button
+                    className="w-full border border-[#64748b] py-2 rounded-md hover:bg-white hover:text-black transition font-semibold"
+                    onClick={() => {
+                      toggleMenu();
+                      navigate("/signin");
+                    }}
+                  >
+                    Sign In
+                  </button>
+                </motion.div>
+              </motion.nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
