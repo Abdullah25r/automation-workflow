@@ -16,7 +16,7 @@ const SkeletonLoader = () => (
   </div>
 );
 
-// Custom select dropdown component
+// Custom select dropdown component (unchanged)
 const CustomSelect = ({ value, onChange, options, name }) => (
   <div className="relative w-full">
     <select
@@ -66,17 +66,33 @@ const Checkout = () => {
     paymentMethod: "cod",
     number: "",
   });
+  const [errors, setErrors] = useState({
+    email: "",
+    number: ""
+  });
 
-  // Check if all required fields are filled
+  // Email validation
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  // Pakistani phone number validation
+  const validatePhoneNumber = (number) => {
+    const re = /^03\d{9}$/;
+    return re.test(number);
+  };
+
+  // Check if all required fields are filled and valid
   const isFormComplete = () => {
     return (
-      form.email &&
+      validateEmail(form.email) &&
+      validatePhoneNumber(form.number) &&
       form.firstName &&
       form.lastName &&
       form.address &&
       form.city &&
-      form.postalCode &&
-      form.number
+      form.postalCode
     );
   };
 
@@ -88,7 +104,6 @@ const Checkout = () => {
       clearTimeout(t2);
     };
   }, []);
-  
 
   const shippingFee = 5;
   const totalPrice = items.reduce(
@@ -97,12 +112,44 @@ const Checkout = () => {
   );
   const finalTotal = totalPrice + shippingFee;
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    // Validate email in real-time
+    if (name === 'email') {
+      setErrors({
+        ...errors,
+        email: value && !validateEmail(value) ? 'Please enter a valid email address' : ''
+      });
+    }
+    
+    // Validate phone number in real-time
+    if (name === 'number') {
+      setErrors({
+        ...errors,
+        number: value && !validatePhoneNumber(value) ? 'Must be in 03XXXXXXXXX format (11 digits)' : ''
+      });
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Final validation before submission
+    const emailValid = validateEmail(form.email);
+    const phoneValid = validatePhoneNumber(form.number);
+    
+    if (!emailValid || !phoneValid) {
+      setErrors({
+        email: !emailValid ? 'Please enter a valid email address' : '',
+        number: !phoneValid ? 'Must be in 03XXXXXXXXX format (11 digits)' : ''
+      });
+      return;
+    }
+
     if (items.length === 0 || !isFormComplete()) return;
+    
     alert("Order Placed Successfully!");
   };
 
@@ -178,6 +225,9 @@ const Checkout = () => {
                   required
                   className="w-full bg-[#23272b] text-white p-3 rounded-xl focus:ring-2 focus:ring-white border border-[#313131] focus:border-white transition-all shadow-sm"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
               </div>
             </section>
 
@@ -275,12 +325,15 @@ const Checkout = () => {
                   <input
                     name="number"
                     type="tel"
-                    placeholder="03XX-XXXXXXX"
+                    placeholder="03XXXXXXXXX"
                     value={form.number}
                     onChange={handleChange}
                     required
                     className="w-full bg-[#23272b] text-white p-3 rounded-xl border border-[#313131] focus:ring-2 focus:ring-white transition-all shadow-sm"
                   />
+                  {errors.number && (
+                    <p className="text-red-500 text-xs mt-1">{errors.number}</p>
+                  )}
                 </div>
                 <div>
                   <label className="text-sm text-gray-400 mb-2 block">
