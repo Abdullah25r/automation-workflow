@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
 const ProductForm = ({
   mode = "add",
   initialData = null,
@@ -15,6 +14,8 @@ const ProductForm = ({
     category: "",
   });
 
+  const [uploading, setUploading] = useState(false);
+
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setFormData(initialData);
@@ -23,16 +24,20 @@ const ProductForm = ({
 
   const handleChange = async (e) => {
     const { name, value, files } = e.target;
+    const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
 
     if (name === "image" && files?.[0]) {
       const file = files[0];
       const formDataCloud = new FormData();
       formDataCloud.append("file", file);
-      formDataCloud.append("upload_preset", "pods-store"); 
+      formDataCloud.append("upload_preset", uploadPreset);
+
+      setUploading(true);
 
       try {
         const res = await axios.post(
-          "https://api.cloudinary.com/v1_1/df65hidyu/image/upload",
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
           formDataCloud,
           {
             headers: {
@@ -43,7 +48,13 @@ const ProductForm = ({
         const imageUrl = res.data.secure_url;
         setFormData((prev) => ({ ...prev, image: imageUrl }));
       } catch (error) {
-        console.error("Cloudinary upload error:", error.response?.data || error);
+        console.error(
+          "Cloudinary upload error:",
+          error.response?.data || error
+        );
+        alert("Image upload failed.");
+      } finally {
+        setUploading(false);
       }
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -51,36 +62,47 @@ const ProductForm = ({
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    if (mode === "edit") {
-      await axios.put(`http://localhost:3001/api/products/${formData.id}`, formData);
-      alert("Product updated successfully!");
-    } else {
-      await axios.post("http://localhost:3001/api/products", formData);
-      alert("Product added successfully!");
-    }
+    e.preventDefault();
 
-    // Reset form (optional in edit mode)
-    if (mode === "add") {
-      setFormData({
-        name: "",
-        description: "",
-        price: "",
-        image: "",
-        category: "",
-      });
-    }
+    try {
+      console.log("Submitting:", formData);
 
-    if (onSubmit) onSubmit(); // Let parent component refresh or close
-  } catch (error) {
-    console.error("Submit error:", error.response?.data || error);
-    alert(`Failed to ${mode === "edit" ? "update" : "add"} product.`);
-  }
-};
+      if (mode === "edit") {
+        await axios.put(
+          `http://localhost:3001/api/products/${formData.id}`,
+          formData
+        );
+        alert("Product updated successfully!");
+      } else {
+        await axios.post(
+          "http://localhost:3001/api/products/addproducts",
+          formData
+        );
+        alert("Product added successfully!");
+      }
+
+      if (mode === "add") {
+        setFormData({
+          name: "",
+          description: "",
+          price: "",
+          image: "",
+          category: "",
+        });
+      }
+
+      if (onSubmit) onSubmit();
+    } catch (error) {
+      console.error("Submit error:", error.response?.data || error);
+      alert(`Failed to ${mode === "edit" ? "update" : "add"} product.`);
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#1a1a1a] p-4 rounded space-y-4 mb-6">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-[#1a1a1a] p-4 rounded space-y-4 mb-6"
+    >
       <input
         name="name"
         value={formData.name}
@@ -112,7 +134,9 @@ const ProductForm = ({
         className="w-full p-2 bg-black text-white rounded"
         required
       >
-        <option value="" disabled>Select Category</option>
+        <option value="" disabled>
+          Select Category
+        </option>
         <option value="pods">Pods</option>
         <option value="headphones">Headphones</option>
         <option value="watch">Watch</option>
@@ -134,8 +158,16 @@ const ProductForm = ({
         />
       )}
       <div className="flex gap-4">
-        <button type="submit" className="bg-green-600 px-4 py-2 rounded">
-          {mode === "edit" ? "Update" : "Add"} Product
+        <button
+          type="submit"
+          disabled={uploading}
+          className={`px-4 py-2 rounded ${
+            uploading ? "bg-gray-500 cursor-not-allowed" : "bg-green-600"
+          }`}
+        >
+          {uploading
+            ? "Uploading..."
+            : `${mode === "edit" ? "Update" : "Add"} Product`}
         </button>
         <button
           type="button"
