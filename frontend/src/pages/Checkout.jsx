@@ -1,8 +1,48 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { cartContext } from "../Context/CartContext";
 import { Link } from "react-router-dom";
+
+// Skeleton loader component
+const SkeletonLoader = () => (
+  <div className="flex flex-col gap-8 animate-pulse min-h-screen bg-black px-4 py-12">
+    <div className="h-12 w-3/6 bg-gray-800 rounded-lg mx-auto mb-10"></div>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="lg:col-span-2 flex flex-col gap-6">
+        <div className="bg-gray-900/80 rounded-3xl p-8 h-56"></div>
+        <div className="bg-gray-900/80 rounded-3xl p-8 h-56"></div>
+      </div>
+      <div className="bg-gray-900/80 rounded-3xl p-8 h-80"></div>
+    </div>
+  </div>
+);
+
+// Custom select dropdown component
+const CustomSelect = ({ value, onChange, options, name }) => (
+  <div className="relative w-full">
+    <select
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="w-full appearance-none bg-[#23272b] text-white p-3 pr-10 rounded-xl border border-[#313131] focus:ring-2 focus:ring-blue-400 focus:border-blue-400 shadow transition-all"
+    >
+      {options.map(opt => (
+        <option key={opt.value} value={opt.value} className="bg-[#23272b] text-white">
+          {opt.label}
+        </option>
+      ))}
+    </select>
+    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </div>
+);
+
 const Checkout = () => {
   const { items } = useContext(cartContext);
+  const [loading, setLoading] = useState(true);
+  const [animate, setAnimate] = useState(false);
   const [form, setForm] = useState({
     email: "",
     firstName: "",
@@ -14,169 +54,262 @@ const Checkout = () => {
     number: ""
   });
 
-  const shippingFee = 200;
+  useEffect(() => {
+    const t1 = setTimeout(() => setLoading(false), 600);
+    const t2 = setTimeout(() => setAnimate(true), 800);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
 
-  const totalPrice = items.reduce(
-    (acc, item) => acc + item.price * item.count,
-    0
-  );
+  const shippingFee = 200;
+  const totalPrice = items.reduce((acc, item) => acc + item.price * item.count, 0);
   const finalTotal = totalPrice + shippingFee;
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Order Placed:", form, items);
+    if (items.length === 0) return;
     alert("Order Placed Successfully!");
   };
 
+  if (loading) return <SkeletonLoader />;
+
+  if (items.length === 0) {
+    return (
+      <div className="bg-black min-h-screen flex flex-col items-center justify-center">
+        <div className="text-white text-3xl font-bold mb-5">Your cart is empty!</div>
+        <Link
+          to="/"
+          className="bg-gradient-to-r from-[#212529] to-[#434343] border border-[#3a3a3a] text-white font-semibold py-3 px-8 rounded-xl hover:from-[#333] hover:to-[#555] shadow-lg transition"
+        >
+          Go Shopping
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <div className="flex  justify-center pt-4">
-        <Link to="/" className="flex items-center">
-            <img src="./img/logo.gif" alt="TimePods Logo" className="h-6 sm:h-7 laptop:h-8" />
-            <span className="font-kanit text-lg sm:text-xl laptop:text-2xl ml-2 text-[#ced4da] hover:text-[#ffffff] transition tracking-wider">
+    <div className="bg-black min-h-screen">
+      {/* Header */}
+      <header className="backdrop-blur-md bg-black/70 border-b border-[#232323] py-4 shadow-md">
+        <div className="container mx-auto px-4 flex justify-center">
+          <Link to="/" className="flex items-center group">
+            <img 
+              src="./img/logo.gif" 
+              alt="TimePods Logo" 
+              className="h-7 transition-transform group-hover:scale-105" 
+            />
+            <span className="font-kanit text-xl ml-3 text-[#ced4da] group-hover:text-white transition-colors tracking-wider">
               TimePods
             </span>
           </Link>
-      
-      </div>
-      <div className="min-h-screen bg-black text-white font-poppins p-6 sm:p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <h2 className="text-2xl font-semibold mb-4">Shipping Details</h2>
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            className="w-full bg-[#1a1a1a] text-white p-3 rounded"
-          />
-          <div className="flex gap-4">
-            <input
-              name="firstName"
-              type="text"
-              placeholder="First Name"
-              value={form.firstName}
-              onChange={handleChange}
-              required
-              className="w-1/2 bg-[#1a1a1a] text-white p-3 rounded"
-            />
-            <input
-              name="lastName"
-              type="text"
-              placeholder="Last Name"
-              value={form.lastName}
-              onChange={handleChange}
-              required
-              className="w-1/2 bg-[#1a1a1a] text-white p-3 rounded"
-            />
-          </div>
-          <input
-            name="address"
-            type="text"
-            placeholder="Address"
-            value={form.address}
-            onChange={handleChange}
-            required
-            className="w-full bg-[#1a1a1a] text-white p-3 rounded"
-          />
-          <div className="flex gap-4">
-            <input
-              name="city"
-              type="text"
-              placeholder="City"
-              value={form.city}
-              onChange={handleChange}
-              required
-              className="w-1/2 bg-[#1a1a1a] text-white p-3 rounded"
-            />
-            <input
-              name="postalCode"
-              type="text"
-              placeholder="Postal Code"
-              value={form.postalCode}
-              onChange={handleChange}
-              required
-              className="w-1/2 bg-[#1a1a1a] text-white p-3 rounded"
-            />
-            
-          </div>
-          <input
-            name="phone"
-            type="text"
-            placeholder="Phone"
-            value={form.number}
-            onChange={handleChange}
-            required
-            className="w-full bg-[#1a1a1a] text-white p-3 rounded"
-          />
-          <div className="space-y-2">
-            <label className="block text-lg">Payment Method</label>
-            <select
-              name="paymentMethod"
-              value={form.paymentMethod}
-              onChange={handleChange}
-              className="w-full bg-[#1a1a1a] text-white p-3 rounded"
-            >
-              <option value="cod">Cash on Delivery</option>
-              <option value="online">Online Card Payment</option>
-            </select>
-          </div>
+        </div>
+      </header>
 
-          <button
-            type="submit"
-            className="w-full bg-white text-black font-semibold text-lg py-3 rounded hover:bg-[#1a1a1a] hover:text-white border hover:border-white transition"
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        <h1 className={`text-4xl font-bold text-center text-white mb-10 tracking-wide transition-all duration-300 ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>Checkout</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Left Column - Shipping Form */}
+          <form
+            onSubmit={handleSubmit}
+            className={`lg:col-span-2 bg-white/10 backdrop-blur-lg p-10 rounded-3xl border border-[#262626] shadow-2xl space-y-10 transition-all duration-500 ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
           >
-            Complete Order
-          </button>
-        </form>
-
-        {/* Right Side - Cart Products */}
-        <div className="sticky top-6 h-fit">
-          <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
-          <div className="space-y-4 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-[#1a1a1a] pr-2">
-            {items.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-4 border-b border-gray-700 pb-2"
-              >
-                <img
-                  src={item.path}
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded"
+            {/* Contact Info */}
+            <section>
+              <h2 className="text-xl font-semibold text-white mb-4 border-b border-[#242424] pb-2">Contact Information</h2>
+              <div>
+                <label className="text-sm text-gray-400 mb-2 block">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full bg-[#23272b] text-white p-3 rounded-xl focus:ring-2 focus:ring-white border border-[#313131] focus:border-white transition-all shadow-sm"
                 />
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p className="text-sm text-gray-400">Qty: {item.count}</p>
-                </div>
-                <p className="text-lg font-semibold">
-                  ₨{(item.price * item.count).toFixed(2)}
-                </p>
               </div>
-            ))}
-          </div>
+            </section>
 
-          <div className="space-y-2">
-            <div className="flex justify-between text-lg">
-              <p>Subtotal:</p>
-              <p>₨{totalPrice.toFixed(2)}</p>
+            {/* Shipping Address */}
+            <section>
+              <h2 className="text-xl font-semibold text-white mb-4 border-b border-[#242424] pb-2">Shipping Address</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-400 mb-2 block">First Name</label>
+                  <input
+                    name="firstName"
+                    type="text"
+                    placeholder="John"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-[#23272b] text-white p-3 rounded-xl border border-[#313131] focus:ring-2 focus:ring-white transition-all shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-400 mb-2 block">Last Name</label>
+                  <input
+                    name="lastName"
+                    type="text"
+                    placeholder="Doe"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-[#23272b] text-white p-3 rounded-xl border border-[#313131] focus:ring-2 focus:ring-white transition-all shadow-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="text-sm text-gray-400 mb-2 block">Address</label>
+                <input
+                  name="address"
+                  type="text"
+                  placeholder="123 Main Street"
+                  value={form.address}
+                  onChange={handleChange}
+                  required
+                  className="w-full bg-[#23272b] text-white p-3 rounded-xl border border-[#313131] focus:ring-2 focus:ring-white transition-all shadow-sm"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="text-sm text-gray-400 mb-2 block">City</label>
+                  <input
+                    name="city"
+                    type="text"
+                    placeholder="Karachi"
+                    value={form.city}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-[#23272b] text-white p-3 rounded-xl border border-[#313131] focus:ring-2 focus:ring-white transition-all shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-400 mb-2 block">Postal Code</label>
+                  <input
+                    name="postalCode"
+                    type="text"
+                    placeholder="12345"
+                    value={form.postalCode}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-[#23272b] text-white p-3 rounded-xl border border-[#313131] focus:ring-2 focus:ring-white transition-all shadow-sm"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Payment Section */}
+            <section>
+              <h2 className="text-xl font-semibold text-white mb-4 border-b border-[#242424] pb-2">Payment</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-400 mb-2 block">Phone Number</label>
+                  <input
+                    name="number"
+                    type="tel"
+                    placeholder="03XX-XXXXXXX"
+                    value={form.number}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-[#23272b] text-white p-3 rounded-xl border border-[#313131] focus:ring-2 focus:ring-white transition-all shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-400 mb-2 block">Payment Method</label>
+                  <CustomSelect
+                    name="paymentMethod"
+                    value={form.paymentMethod}
+                    onChange={handleChange}
+                    options={[
+                      { value: "cod", label: "Cash on Delivery" },
+                      { value: "online", label: "Online Card Payment" }
+                    ]}
+                  />
+                </div>
+              </div>
+            </section>
+          </form>
+
+          {/* Right Column - Order Summary */}
+          <div className={`flex flex-col justify-between bg-white/10 backdrop-blur-lg p-7 rounded-3xl border border-[#262626] shadow-2xl h-fit sticky top-8 transition-all duration-400 ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-5 border-b border-[#232323] pb-3">
+                Order Summary
+              </h2>
+              <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
+                {items.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 border border-[#232323] bg-[#23272b] hover:bg-[#2e3340] transition-colors duration-150 rounded-2xl px-4 py-3 shadow-md group"
+                    style={{ animation: `fadeIn 0.18s ease ${index * 0.04 + 0.01}s both` }}
+                  >
+                    <img
+                      src={item.path}
+                      alt={item.name}
+                      className="w-14 h-14 object-cover rounded-xl border border-[#30343c] bg-[#262a31]"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-semibold text-base truncate">{item.name}</h3>
+                      <p className="text-xs text-gray-400">Qty: {item.count}</p>
+                    </div>
+                    <p className="font-semibold text-base text-[#d9d9d9]">
+                      ₨{(item.price * item.count).toFixed(2)}
+                    </p>
+                  </div>
+                ))}
+                <style>{`
+                  @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px);}
+                    to { opacity: 1; transform: none;}
+                  }
+                `}</style>
+              </div>
+              <div className="mt-6 space-y-3 text-sm text-gray-300">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>₨{totalPrice.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span>₨{shippingFee.toFixed(2)}</span>
+                </div>
+                <div className="border-t border-[#232323] pt-3 mt-2 text-white font-bold text-base">
+                  <div className="flex justify-between">
+                    <span>Total</span>
+                    <span>₨{finalTotal.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between text-lg">
-              <p>Shipping:</p>
-              <p>₨{shippingFee.toFixed(2)}</p>
-            </div>
-            <hr className="border-gray-600" />
-            <div className="flex justify-between text-2xl font-bold">
-              <p>Total:</p>
-              <p>₨{finalTotal.toFixed(2)}</p>
+            <div className="mt-8 space-y-4">
+              <button
+                onClick={handleSubmit}
+                disabled={items.length === 0}
+                className={`w-full font-bold py-3 rounded-xl shadow-xl transition-all duration-300 transform active:translate-y-0
+                  ${items.length === 0
+                    ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-[#fff] to-[#ced4da] text-black hover:-translate-y-0.5 hover:shadow-2xl"}
+                    ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
+                `}
+              >
+                Confirm Order
+              </button>
+              <Link
+                to="/products"
+                className="block text-center bg-[#23272b] border border-[#313131] text-white font-semibold py-3 rounded-xl hover:bg-[#333] transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Continue Shopping
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
