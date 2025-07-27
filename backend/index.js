@@ -1,10 +1,10 @@
 import express from "express";
-import dotenv from "dotenv";
+import env from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import productRoutes from './routes/productRoutes.js'
-dotenv.config();
+env.config();
 //serverside code
 const app = express();
 const PORT = process.env.PORT;

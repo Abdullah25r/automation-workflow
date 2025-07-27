@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from "react";
 import ProductForm from "./ProductForm";
 import { Plus } from "lucide-react";
+import axios from 'axios'
 const ProductList = ({ data = [], title = "Products" }) => {
   const [products, setProducts] = useState(data);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
   useEffect(() => {
     setProducts(data);
   }, [data]);
@@ -21,14 +23,22 @@ const ProductList = ({ data = [], title = "Products" }) => {
     setEditMode(true);
     setSelectedProduct(product);
   };
-  const handleDeleteClick = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-    if (confirmDelete) {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-    }
-  };
+
+const handleDeleteClick = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this product?"
+  );
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(`http://localhost:3001/api/products/${id}`);
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    alert("Something went wrong while deleting.");
+  }
+};
+
 
   const handleFormSubmit = (formData) => {
     if (editMode && selectedProduct) {
