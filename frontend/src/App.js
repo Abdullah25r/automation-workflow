@@ -11,19 +11,20 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
-import Dashboard from "./pages/Dashboard"; 
+import Dashboard from "./pages/Dashboard";
 import MobileCart from "./pages/MobileCart";
-import Checkout from './pages/Checkout'
+import Checkout from "./pages/Checkout";
 import FAQs from "./components/FAQs";
-
+import Admin from "./pages/Admin";
 function App() {
   const location = useLocation();
   const hideLayout = location.pathname.startsWith("/dashboard");
   const hidecheckoutnav = location.pathname.startsWith("/checkout");
+  const hidecheckoutadmin = location.pathname.startsWith("/admin");
 
   return (
     <div className="min-h-screen text-white bg-black">
-      {!hideLayout && !hidecheckoutnav && <Navbar />}
+      {!hideLayout && !hidecheckoutnav && !hidecheckoutadmin && <Navbar />}
       <div className="max-w-[1430px] mx-auto px-4">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -39,9 +40,8 @@ function App() {
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mobile-cart" element={<MobileCart />} />
-          <Route path="/checkout" element={<Checkout/>} />
-          
-
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </div>
       {!hideLayout && <Footer />}

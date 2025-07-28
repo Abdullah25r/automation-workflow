@@ -1,9 +1,10 @@
-// components/ProductList.jsx
+// ProductList.jsx
 import React, { useState, useEffect } from "react";
 import ProductForm from "./ProductForm";
 import { Plus } from "lucide-react";
-import axios from 'axios'
-const ProductList = ({ data = [], title = "Products" }) => {
+import axios from "axios";
+
+const ProductList = ({ data = [], title = "Products", refetchProducts }) => {
   const [products, setProducts] = useState(data);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -12,6 +13,7 @@ const ProductList = ({ data = [], title = "Products" }) => {
   useEffect(() => {
     setProducts(data);
   }, [data]);
+
   const handleAddClick = () => {
     setShowForm(true);
     setEditMode(false);
@@ -24,33 +26,23 @@ const ProductList = ({ data = [], title = "Products" }) => {
     setSelectedProduct(product);
   };
 
-const handleDeleteClick = async (id) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this product?"
-  );
-  if (!confirmDelete) return;
+  const handleDeleteClick = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?"
+    );
+    if (!confirmDelete) return;
 
-  try {
-    await axios.delete(`http://localhost:3001/api/products/${id}`);
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    alert("Something went wrong while deleting.");
-  }
-};
-
-
-  const handleFormSubmit = (formData) => {
-    if (editMode && selectedProduct) {
-      setProducts((prev) =>
-        prev.map((p) =>
-          p.id === selectedProduct.id ? { ...formData, id: p.id } : p
-        )
-      );
-    } else {
-      setProducts((prev) => [...prev, { ...formData, id: Date.now() }]);
+    try {
+      await axios.delete(`http://localhost:3001/api/products/${id}`);
+      await refetchProducts(); // 👈 Re-fetch from backend
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("Something went wrong while deleting.");
     }
+  };
 
+  const handleFormSubmit = async () => {
+    await refetchProducts(); // 👈 Re-fetch from backend after add/edit
     setShowForm(false);
     setEditMode(false);
     setSelectedProduct(null);
@@ -99,18 +91,18 @@ const handleDeleteClick = async (id) => {
               <p className="text-sm">{product.description}</p>
               <p className="text-green-400 font-semibold">₨{product.price}</p>
               <div className="flex justify-evenly">
-              <button
-                onClick={() => handleEditClick(product)}
-                className="bg-yellow-500 text-black px-3 py-1 rounded mt-2"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDeleteClick(product.id)}
-                className="bg-red-600 text-white px-3 py-1 rounded mt-2"
-              >
-                Delete
-              </button>
+                <button
+                  onClick={() => handleEditClick(product)}
+                  className="bg-yellow-500 text-black px-3 py-1 rounded mt-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteClick(product.id)}
+                  className="bg-red-600 text-white px-3 py-1 rounded mt-2"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))
