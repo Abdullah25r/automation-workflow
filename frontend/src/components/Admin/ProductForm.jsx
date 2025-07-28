@@ -75,7 +75,7 @@ const ProductForm = ({
         alert("Product updated successfully!");
       } else {
         await axios.post(
-          "http://localhost:3001/api/products/addproducts",
+          "http://localhost:3001/api/products",
           formData
         );
         alert("Product added successfully!");

@@ -17,7 +17,6 @@ export async function getProducts(req, res) {
   }
 }
 
-
 //this will add products to database
 export async function addProducts(req, res) {
   const { category, name, price, description, image } = req.body;
@@ -70,3 +69,54 @@ export async function deleteProduct(req, res) {
     res.status(500).json({ error: "Failed to delete product" });
   }
 }
+//update a product
+export async function updateProduct(req, res) {
+  const { id } = req.params;
+  const { name, description, price, image, category } = req.body;
+
+  try {
+    const categoryResult = await pool.query(
+      "SELECT category_id FROM categories WHERE name = $1",
+      [category]
+    );
+
+    if (categoryResult.rowCount === 0) {
+      return res.status(400).json({ error: "Invalid category name" });
+    }
+
+    const categoryId = categoryResult.rows[0].category_id;
+    const updateQuery = `
+      UPDATE products
+      SET name = $1,
+          description = $2,
+          price = $3,
+          image = $4,
+          category_id = $5,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE product_id = $6
+      RETURNING *;
+    `;
+
+    const result = await pool.query(updateQuery, [
+      name,
+      description,
+      price,
+      image,
+      categoryId,
+      id,
+    ]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    return res.status(200).json({
+      message: "Product updated successfully",
+      product: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Update product error details:", error);
+    return res.status(500).json({ error: "Failed to update product" });
+  }
+}
+
