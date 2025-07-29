@@ -120,3 +120,22 @@ export async function updateProduct(req, res) {
   }
 }
 
+// function get a specific details
+export async function getSpecificProduct(req, res) {
+  const product_id = req.params.id;
+  try {
+    const result = await pool.query(
+      `SELECT * FROM products WHERE product_id = $1`,
+      [product_id]
+    );
+    if (result.rows.length > 0) {
+      const specificProduct = result.rows[0];
+      res.status(200).json(specificProduct);
+    } else {
+      res.status(404).json({ error: "product not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching specific product:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}

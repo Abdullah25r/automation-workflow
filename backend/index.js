@@ -7,6 +7,7 @@ import session from "express-session";
 import productRoutes from "./routes/productRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import checkoutRoutes from "./routes/checkoutRoutes.js";
+import productDetailRoutes from './routes/productDetailRoutes.js'
 env.config();
 //serverside code
 const app = express();
@@ -37,6 +38,7 @@ app.use(
 
 //routes
 app.use("/api/products", productRoutes);
+app.use("/api/productdetails",productDetailRoutes)
 app.use("/api/admin", adminRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.listen(PORT, () => {

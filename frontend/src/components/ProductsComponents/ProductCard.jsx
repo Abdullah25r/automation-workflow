@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import Star from "../Star";
-import { cartContext } from "../../Context/CartContext"; // This context now has openCart
+import { cartContext } from "../../Context/CartContext"; 
 import { Link } from "react-router-dom";
 
 const ProductCard = (props) => {
-  // Get addProduct and openCart from the same cartContext
   const { addProduct, openCart } = useContext(cartContext);
 
   return (
