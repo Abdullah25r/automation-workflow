@@ -21,7 +21,6 @@ function App() {
   const hideLayout = location.pathname.startsWith("/dashboard");
   const hidecheckoutnav = location.pathname.startsWith("/checkout");
   const hidecheckoutadmin = location.pathname.startsWith("/admin");
-
   return (
     <div className="min-h-screen text-white bg-black">
       {!hideLayout && !hidecheckoutnav && !hidecheckoutadmin && <Navbar />}
@@ -31,7 +30,10 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/news" element={<News />} />
           <Route path="/devices" element={<Devices />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/cart"
+            element={<Cart />}
+          />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about" element={<AboutTimePods />} />
           <Route path="/return-refund" element={<ReturnRefundPolicy />} />

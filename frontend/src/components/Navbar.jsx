@@ -4,23 +4,23 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { FiShoppingCart } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import Cart from "../pages/Cart";
-import { cartContext } from "../Context/CartContext";
+import { cartContext } from "../Context/CartContext"; // This context now includes UI state
 import { ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  // Removed local isCartOpen state and its handlers.
+  // Now we get them from cartContext.
   const navigate = useNavigate();
   const menuRef = useRef();
   const hamburgerRef = useRef();
 
-  const cartProduct = useContext(cartContext);
-  const cartCount = cartProduct.items.reduce((acc, item) => acc + item.count, 0);
+  // Get all cart-related state and functions from the combined context
+  const { items, isCartOpen, openCart, closeCart } = useContext(cartContext);
+  const cartCount = items.reduce((acc, item) => acc + item.count, 0);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
-  const handleOpenCart = () => setIsCartOpen(true);
-  const handleCloseCart = () => setIsCartOpen(false);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -42,7 +42,7 @@ function Navbar() {
     };
   }, [menuOpen]);
 
-  // Animation variants
+  // Animation variants (unchanged)
   const menuContainerVariants = {
     hidden: {
       opacity: 0,
@@ -138,7 +138,7 @@ function Navbar() {
             </button>
             <div className="relative">
               <button
-                onClick={handleOpenCart}
+                onClick={openCart} 
                 className="text-2xl hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
                 aria-label="Open Cart"
               >
@@ -149,7 +149,8 @@ function Navbar() {
                   </span>
                 )}
               </button>
-              <Cart isOpen={isCartOpen} onClose={handleCloseCart} />
+              {/* Pass isCartOpen and closeCart from cartContext to Cart */}
+              <Cart isOpen={isCartOpen} onClose={closeCart} />
             </div>
           </div>
         </div>
@@ -181,7 +182,7 @@ function Navbar() {
           {/* Cart Icon on Right */}
           <div className="relative">
             <button
-              onClick={handleOpenCart}
+              onClick={openCart} 
               className="text-2xl hover:text-white p-2"
               aria-label="Open Cart"
             >
@@ -192,11 +193,12 @@ function Navbar() {
                 </span>
               )}
             </button>
-            <Cart isOpen={isCartOpen} onClose={handleCloseCart} />
+            {/* Pass isCartOpen and closeCart from cartContext to Cart */}
+            <Cart isOpen={isCartOpen} onClose={closeCart} />
           </div>
         </div>
 
-        {/* Animated Mobile Menu */}
+        {/* Animated Mobile Menu (unchanged) */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
@@ -207,7 +209,7 @@ function Navbar() {
               exit="hidden"
               variants={menuContainerVariants}
             >
-              <motion.nav 
+              <motion.nav
                 className="flex flex-col space-y-2 text-sm font-medium font-poppins pt-2 pb-4"
                 variants={{
                   hidden: { opacity: 0 },

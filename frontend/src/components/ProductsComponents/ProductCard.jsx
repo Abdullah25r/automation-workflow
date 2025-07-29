@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import Star from "../Star";
-import { cartContext } from "../../Context/CartContext";
+import { cartContext } from "../../Context/CartContext"; // This context now has openCart
 import { Link } from "react-router-dom";
 
 const ProductCard = (props) => {
-  const context = useContext(cartContext);
+  // Get addProduct and openCart from the same cartContext
+  const { addProduct, openCart } = useContext(cartContext);
 
   return (
     <div className="w-full max-w-xs mx-auto bg-[#1a1a1a] p-4 sm:p-5 mt-3 rounded-lg shadow-md hover:-translate-y-2 transition-all hover:shadow-[#1a1a1a] duration-300">
@@ -20,8 +21,7 @@ const ProductCard = (props) => {
           <h2 className="font-poppins font-semibold text-base text-white">{props.name}</h2>
           <p className="text-sm text-gray-300 line-clamp-2 hidden sm:block">{props.desc}</p>
           <div className="hidden sm:block">
-
-          <Star />
+            <Star />
           </div>
         </div>
       </Link>
@@ -36,7 +36,8 @@ const ProductCard = (props) => {
           type="button"
           className="text-black bg-white text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 inline-flex justify-center items-center border border-[#64748b] rounded-md hover:bg-[#1a1a1a] hover:text-white transition duration-250 ease-in-out font-medium w-full sm:w-auto"
           onClick={() => {
-            context.addProduct(props);
+            addProduct(props); // Add product to cart
+            openCart(); // Open the cart sidebar
           }}
         >
           <svg

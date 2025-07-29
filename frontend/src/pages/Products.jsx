@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"; // Import axios
 import ProductsHeader from "../components/ProductsComponents/ProductsHeader";
 import ProductCard from "../components/ProductsComponents/ProductCard";
-import { products } from "../AllProducts";
-
-// Skeleton loader component
 const ProductCardSkeleton = () => (
   <div className="animate-pulse">
     <div className="bg-[#2a2a2a] rounded-lg h-56"></div>
@@ -15,51 +13,66 @@ const ProductCardSkeleton = () => (
   </div>
 );
 
-function filterProducts(category) {
-  if (category === "all") return products;
-  return products.filter(product => product.category === category);
-}
-
 function Products(props) {
   const [category, setCategory] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
   const [isChangingCategory, setIsChangingCategory] = useState(false);
+  const [fetchedProducts, setFetchedProducts] = useState([]);
+  const API_URL = "http://localhost:3001/api/products"; 
 
-  // Simulate initial load
+  const filterProducts = (categoryToFilter) => {
+    if (categoryToFilter === "all") {
+      return fetchedProducts;
+    }
+    return fetchedProducts.filter(product => product.category === categoryToFilter);
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    const fetchProducts = async () => {
+      setIsLoading(true); 
+      try {
+        const response = await axios.get(API_URL);
+        setFetchedProducts(response.data); // Set the fetched data
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        
+        const timer = setTimeout(() => {
+          setIsLoading(false); 
+        }, 1000);
+        return () => clearTimeout(timer); 
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, []);
+    fetchProducts();
+  }, []); // Empty dependency array means this runs once on mount
 
   // Handle category changes
   const handleCategoryChange = (newCategory) => {
     setIsChangingCategory(true);
     setCategory(newCategory);
-    
-    // Simulate API delay for category change
+
     setTimeout(() => {
       setIsChangingCategory(false);
-    }, 400); // Slightly faster than initial load
+    }, 400);
   };
 
   return (
     <div className="px-4">
       <ProductsHeader onCategorySelect={handleCategoryChange} />
-      
+
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-4">
         {(isLoading || isChangingCategory) ? (
           Array(8).fill(0).map((_, index) => (
             <ProductCardSkeleton key={`skeleton-${index}`} />
           ))
         ) : (
+          // Render actual product cards once data is loaded and not changing category
           filterProducts(category).map((product, index) => (
             <ProductCard
-              key={`${product.id}-${index}`} // Better key for re-renders
-              id={product.id}
-              path={product.image}
+              key={product.product_id} // Use product_id as the unique key
+              id={product.product_id} // Map product_id from API to id prop
+              path={product.image} // Map image from API to path prop
               name={product.name}
               desc={product.description}
               price={product.price}
