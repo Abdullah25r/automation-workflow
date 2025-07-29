@@ -5,6 +5,49 @@ import ProductReviews from "./ProductReviews";
 import { cartContext } from '../../Context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
+// --- Skeleton Loader Component ---
+const ProductDetailSkeleton = () => (
+  <div className="container mx-auto p-4 my-10 flex flex-col md:flex-row md:space-x-10 animate-pulse">
+    {/* Image Placeholder */}
+    <div className="bg-gray-800 p-5 rounded-lg shadow-md flex-1 h-96 md:h-[500px] flex items-center justify-center">
+      <div className="w-full h-full bg-gray-700 rounded-lg"></div>
+    </div>
+
+    {/* Details Placeholder */}
+    <div className="flex-1 mt-6 md:mt-0">
+      {/* Title Placeholder */}
+      <div className="h-16 bg-gray-700 rounded-md w-3/4 mb-6"></div>
+      
+      {/* Category, Color, Features Placeholders */}
+      <div className="mt-3 space-y-3">
+        <div className="h-6 bg-gray-700 rounded-md w-1/2"></div>
+        <div className="h-6 bg-gray-700 rounded-md w-2/3"></div>
+        <div className="h-6 bg-gray-700 rounded-md w-1/2"></div>
+      </div>
+
+      {/* Description Placeholder */}
+      <div className="mt-4 space-y-2">
+        <div className="h-4 bg-gray-700 rounded-md w-full"></div>
+        <div className="h-4 bg-gray-700 rounded-md w-11/12"></div>
+        <div className="h-4 bg-gray-700 rounded-md w-10/12"></div>
+      </div>
+
+      {/* Price Placeholders */}
+      <div className="mt-1 pt-6 space-y-2">
+        <div className="h-6 bg-gray-700 rounded-md w-1/4"></div>
+        <div className="h-8 bg-gray-700 rounded-md w-1/3"></div>
+      </div>
+
+      {/* Button Placeholders */}
+      <div className="flex flex-col gap-4 mt-4 pt-8">
+        <div className="h-12 bg-gray-700 rounded-lg w-full"></div>
+        <div className="h-12 bg-gray-700 rounded-lg w-full"></div>
+      </div>
+    </div>
+  </div>
+);
+
+// --- ProductDetail Component ---
 function ProductDetail() {
   const { id } = useParams(); // 'id' will be the UUID string from the URL
   const navigate = useNavigate();
@@ -17,49 +60,54 @@ function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        setLoading(true); 
-        setError(null);   
+        setLoading(true); // Set loading state to true before fetching
+        setError(null);   // Clear any previous errors
 
+        // Construct the API URL using the product ID (UUID)
         const apiUrl = `http://localhost:3001/api/productdetails/${id}`;
         
+        // Make the GET request using Axios
         const response = await axios.get(apiUrl);
         
+        // Axios automatically parses JSON, so data is directly in response.data
         setProduct(response.data); 
 
       } catch (err) {
+        // Handle different types of errors
         if (axios.isAxiosError(err)) {
+          // Axios-specific error (e.g., network error, 4xx/5xx response)
           if (err.response) {
+            // Server responded with a status other than 2xx
             if (err.response.status === 404) {
               setError("Product not found.");
             } else {
               setError(`Error: ${err.response.status} - ${err.response.data.error || 'Something went wrong on the server.'}`);
             }
           } else if (err.request) {
-            
+            // Request was made but no response was received (e.g., network down)
             setError("Network error: Could not connect to the server.");
           } else {
+            // Something else happened while setting up the request
             setError("An unexpected error occurred.");
           }
         } else {
-          
+          // Non-Axios error
           setError("An unknown error occurred.");
         }
         console.error("Error fetching product details:", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading state to false after fetch completes (success or error)
       }
     };
 
-    if (id) { 
+    if (id) { // Only fetch if an ID (UUID) is available from the URL
       fetchProduct();
     }
-  }, [id]); 
+  }, [id]); // Dependency array: re-run effect if the 'id' changes
+
+  // --- Render Logic based on loading/error/product state ---
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen text-white text-2xl">
-        Loading product details...
-      </div>
-    );
+    return <ProductDetailSkeleton />; // Render the skeleton component
   }
 
   if (error) {
@@ -91,7 +139,7 @@ function ProductDetail() {
         <div className="bg-[#1a1a1a] p-5 rounded-lg shadow-md flex-1">
           {/* Ensure your backend returns the correct relative path or full URL for images */}
           <img
-            src={`${product.image}`} 
+            src={product.image} 
             alt={product.name}
             className="w-full h-auto rounded-lg"
             // Add an onerror fallback for images
