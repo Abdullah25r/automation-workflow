@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../components/Admin/Sidebar";
 import DashboardContent from "../components/Admin/DashboardContent";
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [current, setCurrent] = useState("dashboard");
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -26,6 +25,8 @@ const Dashboard = () => {
       });
   }, []);
 
+  
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -34,10 +35,12 @@ const Dashboard = () => {
     );
   }
 
-  if (!isAuthenticated) return null; // Shouldn't happen, but safe
+  if (!isAuthenticated) return null;
 
   return (
-    <div className="flex h-screen bg-black text-white">
+    <div className="flex full bg-black text-white relative">
+     
+
       <Sidebar current={current} onSelect={setCurrent} />
       <div className="flex-1 p-6">
         <DashboardContent selected={current} />

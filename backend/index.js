@@ -31,7 +31,7 @@ app.use(
     cookie: {
       secure: false, // true if HTTPS
       httpOnly: true,
-      maxAge: 60 * 1000, // 1 day
+      maxAge: 24*60*60 * 1000, // 1 day
     },
   })
 );

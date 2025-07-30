@@ -1,7 +1,14 @@
 import express from 'express'
-import { loginAdmin,getDashboardData } from '../controllers/adminController.js';
+import { loginAdmin,getDashboardData,logoutAdmin,getAllCustomers } from '../controllers/adminController.js';
+import { getAllOrders, getAdminOrderDetail, dispatchOrder } from '../controllers/adminOrderController.js';
 const router = express.Router();
 
-router.post('/', loginAdmin);
 router.get('/dashboard-data', getDashboardData);
+router.get('/orders', getAllOrders)
+router.get('/orders/:id', getAdminOrderDetail)
+router.get('/customers', getAllCustomers); 
+router.post('/', loginAdmin);
+router.post('/logout', logoutAdmin)
+router.put('/orders/:orderId/dispatch', dispatchOrder);
+
 export default router

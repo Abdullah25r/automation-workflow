@@ -15,7 +15,7 @@ const ProductForm = ({
   });
 
   const [uploading, setUploading] = useState(false);
-
+  
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setFormData(initialData);
@@ -26,18 +26,17 @@ const ProductForm = ({
     const { name, value, files } = e.target;
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
-    console.log(cloudName,uploadPreset)
     if (name === "image" && files?.[0]) {
       const file = files[0];
       const formDataCloud = new FormData();
       formDataCloud.append("file", file);
-      formDataCloud.append("upload_preset", "pods-store");
+      formDataCloud.append("upload_preset", uploadPreset);
 
       setUploading(true);
 
       try {
         const res = await axios.post(
-          `https://api.cloudinary.com/v1_1/df65hidyu/image/upload`,
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
           formDataCloud,
           {
             headers: {
