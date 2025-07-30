@@ -15,6 +15,8 @@ import Dashboard from "./pages/Dashboard";
 import MobileCart from "./pages/MobileCart";
 import Checkout from "./pages/Checkout";
 import FAQs from "./components/FAQs";
+import { Toaster } from "react-hot-toast";
+
 import Admin from "./pages/Admin";
 function App() {
   const location = useLocation();
@@ -30,10 +32,7 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/news" element={<News />} />
           <Route path="/devices" element={<Devices />} />
-          <Route
-            path="/cart"
-            element={<Cart />}
-          />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about" element={<AboutTimePods />} />
           <Route path="/return-refund" element={<ReturnRefundPolicy />} />
@@ -45,6 +44,41 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{
+            // Base style for all toasts
+            className:
+              "rounded-xl px-5 py-4 shadow-xl border-l-4 transition-transform duration-500 ease-in-out",
+            style: {
+              background: "#1f1f1f", // Dark background
+              color: "#f1f1f1", // Light text
+              transform: "translateX(-20px)", // Slide in from left
+            },
+            duration: 3500,
+
+            // Custom Success Toast
+            success: {
+              className:
+                "bg-green-600 border-green-400 text-white rounded-xl px-5 py-4 shadow-md",
+              iconTheme: {
+                primary: "#34d399", // Tailwind green-400
+                secondary: "#ffffff",
+              },
+            },
+
+            // Custom Error Toast
+            error: {
+              className:
+                "bg-red-600 border-red-400 text-white rounded-xl px-5 py-4 shadow-md",
+              iconTheme: {
+                primary: "#f87171", // Tailwind red-400
+                secondary: "#ffffff",
+              },
+            },
+          }}
+        />
       </div>
       {!hideLayout && <Footer />}
     </div>
