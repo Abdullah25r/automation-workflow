@@ -4,6 +4,7 @@ import axios from "axios";
 import ProductList from "./ProductList";
 import Main from "./Main";
 import OrdersTable from "./Orders/OrdersTable";
+import CustomersList from "./Customers/CustomersList";
 
 const DashboardContent = ({ selected }) => {
   const lowerSelected = selected.toLowerCase();
@@ -63,6 +64,7 @@ const DashboardContent = ({ selected }) => {
       case "orders":
         return <OrdersTable />;
       case "customers":
+        return <CustomersList/>;
       case "analytics":
       case "setting":
         return <p className="p-4">Section under construction.</p>;
