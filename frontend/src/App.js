@@ -56,7 +56,7 @@ function App() {
               color: "#f1f1f1", // Light text
               transform: "translateX(-20px)", // Slide in from left
             },
-            duration: 3500,
+            duration: 2500,
 
             // Custom Success Toast
             success: {
