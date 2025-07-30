@@ -1,17 +1,17 @@
 import React from "react";
 import StatCard from './StatCard';
-import { products } from '../../AllProducts'; // Assuming this provides your product data
+import { products } from '../../AllProducts'; 
 import axios from 'axios';
-import { LogOut, Package, ShoppingCart, Users } from "lucide-react"; // Only keeping relevant icons for the main content
+import { LogOut, Package, ShoppingCart, Users } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
-
+import {baseURL} from '../../Api/productapi'
 function Main() { 
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3001/api/admin/logout",
+        `${baseURL}/api/admin/logout`,
         {},
         { withCredentials: true }
       );
@@ -49,7 +49,7 @@ function Main() {
           <StatCard title="Total Products" value={products.length} icon={<Package className="text-indigo-500" />} />
           <StatCard title="Total Orders" value="1,245" icon={<ShoppingCart className="text-green-500" />} />
           <StatCard title="Total Customers" value="890" icon={<Users className="text-orange-500" />} />
-          <StatCard title="Revenue (MTD)" value="$12,500" icon={<span className="text-emerald-500 font-bold text-xl">$</span>} />
+          <StatCard title="Revenue (MTD)" value="12,500" icon={<span className="text-emerald-500 font-bold text-xl">$</span>} />
         </div>
       </section>
 
