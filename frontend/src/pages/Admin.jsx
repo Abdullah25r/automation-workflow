@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { baseURL } from "../Api/productapi";
 const Admin = () => {
   const [formData, setFormData] = useState({ name: "", password: "" });
   const [error, setError] = useState("");
@@ -18,7 +18,7 @@ const Admin = () => {
     setIsLoading(true); // Set loading to true when submission starts
     try {
       const res = await axios.post(
-        "http://localhost:3001/api/admin",
+        `${baseURL}/api/admin`,
         formData,
         { withCredentials: true }
       );

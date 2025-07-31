@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {baseURL} from '../../Api/productapi'
 const ProductForm = ({
   mode = "add",
   initialData = null,
@@ -68,13 +69,13 @@ const ProductForm = ({
 
       if (mode === "edit") {
         await axios.put(
-          `http://localhost:3001/api/products/${formData.id}`,
+          `${baseURL}/api/products/${formData.id}`,
           formData
         );
         alert("Product updated successfully!");
       } else {
         await axios.post(
-          "http://localhost:3001/api/products",
+          `${baseURL}/api/products`,
           formData
         );
         alert("Product added successfully!");

@@ -1,4 +1,6 @@
+// Sidebar.jsx (Keep as is from previous response)
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const navItems = [
   { label: 'Dashboard', key: 'dashboard' },
@@ -18,9 +20,24 @@ const navItems = [
   { label: 'Settings', key: 'settings' },
 ];
 
-function Sidebar({ current, onSelect }) {
+function Sidebar({ current, onSelect, isOpen }) {
   return (
-    <aside className="h-full bg-black text-white w-64 flex-shrink-0 flex flex-col border-r border-zinc-900">
+    <motion.aside
+      className={`h-full bg-black text-white w-64 flex-shrink-0 flex flex-col border-r border-zinc-900 z-40`}
+      variants={{
+        open: { x: 0, opacity: 1, display: 'flex' },
+        closed: { x: '-100%', opacity: 0, transitionEnd: { display: 'none' } }
+      }}
+      initial={window.innerWidth < 1024 ? "closed" : "open"}
+      animate={isOpen ? "open" : "closed"}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      style={{
+        position: window.innerWidth < 1024 ? 'fixed' : 'relative',
+        top: 0,
+        left: 0,
+        height: '100vh',
+      }}
+    >
       <div className="text-2xl font-extrabold py-5 px-7 tracking-widest">TimePods</div>
       <nav className="flex-1">
         <ul className="space-y-5 px-5">
@@ -55,7 +72,7 @@ function Sidebar({ current, onSelect }) {
         </ul>
       </nav>
       <div className="text-xs text-zinc-400 px-7 mt-auto">© 2025 Pods Admin</div>
-    </aside>
+    </motion.aside>
   );
 }
 

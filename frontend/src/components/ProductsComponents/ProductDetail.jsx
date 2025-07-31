@@ -4,7 +4,7 @@ import axios from 'axios'; // Import Axios
 import ProductReviews from "./ProductReviews";
 import { cartContext } from '../../Context/CartContext';
 import { useNavigate } from 'react-router-dom';
-
+import { baseURL } from "../../Api/productapi";
 // --- Skeleton Loader Component ---
 const ProductDetailSkeleton = () => (
   <div className="container mx-auto p-4 my-10 flex flex-col md:flex-row md:space-x-10 animate-pulse">
@@ -64,7 +64,7 @@ function ProductDetail() {
         setError(null);   // Clear any previous errors
 
         // Construct the API URL using the product ID (UUID)
-        const apiUrl = `http://localhost:3001/api/productdetails/${id}`;
+        const apiUrl = `${baseURL}/api/productdetails/${id}`;
         
         // Make the GET request using Axios
         const response = await axios.get(apiUrl);

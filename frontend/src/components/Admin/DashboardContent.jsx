@@ -5,7 +5,7 @@ import ProductList from "./ProductList";
 import Main from "./Main";
 import OrdersTable from "./Orders/OrdersTable";
 import CustomersList from "./Customers/CustomersList";
-
+import { baseURL } from "../../Api/productapi";
 const DashboardContent = ({ selected }) => {
   const lowerSelected = selected.toLowerCase();
   const [products, setProducts] = useState([]);
@@ -13,7 +13,7 @@ const DashboardContent = ({ selected }) => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/api/products/");
+      const res = await axios.get(`${baseURL}/api/products/`);
       const data = res.data.map((p) => ({
         id: p.product_id,
         name: p.name,

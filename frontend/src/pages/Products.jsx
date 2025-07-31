@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios
 import ProductsHeader from "../components/ProductsComponents/ProductsHeader";
 import ProductCard from "../components/ProductsComponents/ProductCard";
+import { baseURL } from "../Api/productapi";
 const ProductCardSkeleton = () => (
   <div className="animate-pulse">
     <div className="bg-[#2a2a2a] rounded-lg h-56"></div>
@@ -18,7 +19,7 @@ function Products(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [isChangingCategory, setIsChangingCategory] = useState(false);
   const [fetchedProducts, setFetchedProducts] = useState([]);
-  const API_URL = "http://localhost:3001/api/products"; 
+  const API_URL = `${baseURL}/api/products`; 
 
   const filterProducts = (categoryToFilter) => {
     if (categoryToFilter === "all") {
@@ -45,7 +46,7 @@ function Products(props) {
     };
 
     fetchProducts();
-  }, []); // Empty dependency array means this runs once on mount
+  }); // Empty dependency array means this runs once on mount
 
   // Handle category changes
   const handleCategoryChange = (newCategory) => {

@@ -2,7 +2,7 @@ import React from 'react'
 
 function Devices() {
   return (
-    <div>Devices</div>
+    <div>section is under construction</div>
   )
 }
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import ProductForm from "./ProductForm";
 import { Plus } from "lucide-react";
 import axios from "axios";
-
+import { baseURL } from "../../Api/productapi";
 const ProductList = ({ data = [], title = "Products", refetchProducts }) => {
   const [products, setProducts] = useState(data);
   const [showForm, setShowForm] = useState(false);
@@ -33,8 +33,8 @@ const ProductList = ({ data = [], title = "Products", refetchProducts }) => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:3001/api/products/${id}`);
-      await refetchProducts(); // 👈 Re-fetch from backend
+      await axios.delete(`${baseURL}/api/products/${id}`);
+      await refetchProducts(); 
     } catch (error) {
       console.error("Error deleting product:", error);
       alert("Something went wrong while deleting.");
@@ -42,7 +42,7 @@ const ProductList = ({ data = [], title = "Products", refetchProducts }) => {
   };
 
   const handleFormSubmit = async () => {
-    await refetchProducts(); // 👈 Re-fetch from backend after add/edit
+    await refetchProducts(); 
     setShowForm(false);
     setEditMode(false);
     setSelectedProduct(null);

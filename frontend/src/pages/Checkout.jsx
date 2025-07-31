@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { cartContext } from "../Context/CartContext";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios"; // Import axios
-
+import { baseURL } from '../Api/productapi'
 // Skeleton loader component (unchanged)
 const SkeletonLoader = () => (
   <div className="flex flex-col gap-8 animate-pulse min-h-screen bg-black px-4 py-12">
@@ -97,9 +97,8 @@ const Checkout = () => {
     number: ""
   });
 
-  // API Endpoints
-  const API_BASE_URL = "http://localhost:3001/api";
-  const ORDERS_API_URL = `${API_BASE_URL}/checkout`;
+  
+  const ORDERS_API_URL = `${baseURL}/api/checkout`;
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
