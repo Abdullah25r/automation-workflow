@@ -74,7 +74,7 @@ function Cart({ isOpen, onClose }) {
                   <Cartproduct
                     key={index}
                     name={item.name}
-                    path={item.path}
+                    path={item.path || item.image}
                     price={item.price}
                     id={item.id}
                     count={item.count}

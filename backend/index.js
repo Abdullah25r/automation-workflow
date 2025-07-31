@@ -19,7 +19,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "https://pods-store.vercel.app",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );

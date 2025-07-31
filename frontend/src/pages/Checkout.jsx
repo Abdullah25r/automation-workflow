@@ -476,7 +476,7 @@ const Checkout = () => {
                     }}
                   >
                     <img
-                      src={item.path}
+                      src={item.path || item.image}
                       alt={item.name}
                       className="w-14 h-14 object-cover rounded-xl border border-[#30343c] bg-[#262a31]"
                     />

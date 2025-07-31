@@ -5,6 +5,7 @@ import ProductReviews from "./ProductReviews";
 import { cartContext } from '../../Context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { baseURL } from "../../Api/productapi";
+
 // --- Skeleton Loader Component ---
 const ProductDetailSkeleton = () => (
   <div className="container mx-auto p-4 my-10 flex flex-col md:flex-row md:space-x-10 animate-pulse">
@@ -17,12 +18,13 @@ const ProductDetailSkeleton = () => (
     <div className="flex-1 mt-6 md:mt-0">
       {/* Title Placeholder */}
       <div className="h-16 bg-gray-700 rounded-md w-3/4 mb-6"></div>
-      
+
       {/* Category, Color, Features Placeholders */}
       <div className="mt-3 space-y-3">
         <div className="h-6 bg-gray-700 rounded-md w-1/2"></div>
-        <div className="h-6 bg-gray-700 rounded-md w-2/3"></div>
-        <div className="h-6 bg-gray-700 rounded-md w-1/2"></div>
+        {/* Added placeholders for new fields */}
+        <div className="h-6 bg-gray-700 rounded-md w-2/3"></div> {/* Color placeholder */}
+        <div className="h-6 bg-gray-700 rounded-md w-1/2"></div> {/* Features placeholder */}
       </div>
 
       {/* Description Placeholder */}
@@ -34,8 +36,8 @@ const ProductDetailSkeleton = () => (
 
       {/* Price Placeholders */}
       <div className="mt-1 pt-6 space-y-2">
-        <div className="h-6 bg-gray-700 rounded-md w-1/4"></div>
-        <div className="h-8 bg-gray-700 rounded-md w-1/3"></div>
+        <div className="h-6 bg-gray-700 rounded-md w-1/4"></div> {/* Original Price placeholder */}
+        <div className="h-8 bg-gray-700 rounded-md w-1/3"></div> {/* Discount Price placeholder */}
       </div>
 
       {/* Button Placeholders */}
@@ -64,13 +66,13 @@ function ProductDetail() {
         setError(null);   // Clear any previous errors
 
         // Construct the API URL using the product ID (UUID)
-        const apiUrl = `${baseURL}/api/productdetails/${id}`;
-        
+        const apiUrl = `${baseURL}/api/productdetails/${id}`; // Assuming this is the correct endpoint for specific product details
+
         // Make the GET request using Axios
         const response = await axios.get(apiUrl);
-        
+
         // Axios automatically parses JSON, so data is directly in response.data
-        setProduct(response.data); 
+        setProduct(response.data);
 
       } catch (err) {
         // Handle different types of errors
@@ -126,23 +128,27 @@ function ProductDetail() {
       </div>
     );
   }
-  
+
   // --- Product details rendered once data is available ---
   const handleCheckout = (product) => {
     context.addProduct(product);
     navigate("/checkout");
   };
 
+  // Determine if there's a valid discount price to display
+  // Check if discount_price exists AND is not null
+  const hasDiscount = product.discount_price !== null && product.discount_price !== undefined;
+  // Also check if discount_price is actually less than price (to avoid displaying same price as discount)
+  const isActuallyDiscounted = hasDiscount && product.discount_price < product.price;
+
   return (
     <div>
       <div className="container mx-auto p-4 my-10 flex flex-col md:flex-row md:space-x-10">
         <div className="bg-[#1a1a1a] p-5 rounded-lg shadow-md flex-1">
-          {/* Ensure your backend returns the correct relative path or full URL for images */}
           <img
-            src={product.image} 
+            src={product.image}
             alt={product.name}
             className="w-full h-auto rounded-lg"
-            // Add an onerror fallback for images
             onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/000000/FFFFFF?text=Image+Not+Found"; }}
           />
         </div>
@@ -150,24 +156,43 @@ function ProductDetail() {
           <h1 className="text-6xl font-bold text-white mb-6">{product.name}</h1>
           <div className="mt-3">
             <p className="text-gray-400 mb-2">Category: {product.category}</p>
-            <p className="text-gray-400 mb-2">
-              Color:{" "}
-              <span className="text-white font-medium">{product.color}</span>
-            </p>
-            <p className="text-gray-400 mb-2">
-              Features:{" "}
-              <span className="text-white font-medium">{product.feature}</span>
-            </p>
+
+            {/* Display Color if available */}
+            {product.color && (
+              <p className="text-gray-400 mb-2">
+                Color:{" "}
+                <span className="text-white font-medium">{product.color}</span>
+              </p>
+            )}
+
+            {/* Display Features if available */}
+            {product.features && ( // Assuming 'features' is the correct property name from backend
+              <p className="text-gray-400 mb-2">
+                Features:{" "}
+                <span className="text-white font-medium">{product.features}</span>
+              </p>
+            )}
+
             <p className="text-gray-300 mt-4">{product.description}</p>
           </div>
           <div className="mt-1">
-            <p className="text-lg text-gray-400 pt-6">
-              Original Price:{" "}
-              <span className="line-through">Rs. {product.price}</span>
-            </p>
-            <p className="text-xl font-semibold text-green-500 mt-1">
-              Now: ${product.discountPrice}
-            </p>
+            {/* Conditional Price Display */}
+            {isActuallyDiscounted ? (
+              <>
+                <p className="text-lg text-gray-400 pt-6">
+                  Original Price:{" "}
+                  <span className="line-through">Rs. {product.price}</span>
+                </p>
+                <p className="text-xl font-semibold text-green-500 mt-1">
+                  Now: Rs. {product.discount_price} {/* Use discount_price here */}
+                </p>
+              </>
+            ) : (
+              // If no discount, just show the original price
+              <p className="text-xl font-semibold text-white pt-6">
+                Price: Rs. {product.price}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-4 mt-4 pt-8">
             <button
@@ -188,7 +213,8 @@ function ProductDetail() {
         </div>
       </div>
       {/* Pass the product ID (UUID) to ProductReviews */}
-      <ProductReviews productId={product.id} />
+      {/* Ensure product.product_id is correctly accessed, assuming backend returns 'product_id' */}
+      <ProductReviews productId={product.product_id} />
     </div>
   );
 }
