@@ -1,8 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { cartContext } from "../Context/CartContext";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import axios from "axios"; // Import axios
-import { baseURL } from '../Api/productapi'
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { baseURL } from '../Api/productapi';
+import { motion } from 'framer-motion'; // Import motion for animations
+import { CheckCircle, XCircle } from 'lucide-react'; // Import icons for success/error
+
 // Skeleton loader component (unchanged)
 const SkeletonLoader = () => (
   <div className="flex flex-col gap-8 animate-pulse min-h-screen bg-black px-4 py-12">
@@ -53,14 +56,37 @@ const CustomSelect = ({ value, onChange, options, name }) => (
   </div>
 );
 
-// Custom Modal Component for messages
+// Custom Modal Component for messages - UPDATED
 const MessageModal = ({ message, type, onClose }) => {
   const bgColor = type === "success" ? "bg-green-600" : "bg-red-600";
   const textColor = "text-white";
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className={`${bgColor} ${textColor} p-8 rounded-xl shadow-lg max-w-sm w-full text-center`}>
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className={`${bgColor} ${textColor} p-8 rounded-xl shadow-lg max-w-sm w-full text-center flex flex-col items-center`}
+      >
+        {type === "success" ? (
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+          >
+            <CheckCircle size={64} className="text-white mb-4" />
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ scale: 0, rotate: 180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+          >
+            <XCircle size={64} className="text-white mb-4" />
+          </motion.div>
+        )}
         <p className="text-xl font-semibold mb-4">{message}</p>
         <button
           onClick={onClose}
@@ -68,19 +94,19 @@ const MessageModal = ({ message, type, onClose }) => {
         >
           Close
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 };
 
 
 const Checkout = () => {
-  const { items, clearCart } = useContext(cartContext); // Get clearCart from context
-  const navigate = useNavigate(); // Initialize navigate
+  const { items, clearCart } = useContext(cartContext);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [animate, setAnimate] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // New state for submission loading
-  const [modal, setModal] = useState(null); // State for modal message { message, type }
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [modal, setModal] = useState(null);
 
   const [form, setForm] = useState({
     email: "",
@@ -90,14 +116,13 @@ const Checkout = () => {
     city: "",
     postalCode: "",
     paymentMethod: "cod",
-    number: "", // This is phone number
+    number: "",
   });
   const [errors, setErrors] = useState({
     email: "",
     number: ""
   });
 
-  
   const ORDERS_API_URL = `${baseURL}/api/checkout`;
 
   const validateEmail = (email) => {
@@ -106,11 +131,10 @@ const Checkout = () => {
   };
 
   const validatePhoneNumber = (number) => {
-    const re = /^03\d{9}$/; // Starts with 03, followed by 9 digits
+    const re = /^03\d{9}$/;
     return re.test(number);
   };
 
-  // Check if all required fields are filled and valid
   const isFormComplete = () => {
     return (
       validateEmail(form.email) &&
@@ -143,7 +167,6 @@ const Checkout = () => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    // Validate email in real-time
     if (name === 'email') {
       setErrors({
         ...errors,
@@ -151,7 +174,6 @@ const Checkout = () => {
       });
     }
 
-    // Validate phone number in real-time
     if (name === 'number') {
       setErrors({
         ...errors,
@@ -163,7 +185,6 @@ const Checkout = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Final client-side validation before submission
     const emailValid = validateEmail(form.email);
     const phoneValid = validatePhoneNumber(form.number);
 
@@ -180,52 +201,47 @@ const Checkout = () => {
       return;
     }
 
-    setIsSubmitting(true); // Start submission loading
+    setIsSubmitting(true);
 
     try {
-      // Prepare the data for the order creation
-      // This payload assumes your backend can handle customer creation/lookup
-      // and then order creation, potentially including order items in one go.
       const orderData = {
-        customer: { // Data for customer table
+        customer: {
           email: form.email,
           first_name: form.firstName,
           last_name: form.lastName,
           address: form.address,
           city: form.city,
           postal_code: form.postalCode,
-          phone_number: form.number, // Map 'number' to 'phone_number'
-          payment_method: form.paymentMethod // This is customer's preferred method
+          phone_number: form.number,
+          payment_method: form.paymentMethod
         },
-        order: { // Data for orders table
+        order: {
           total_amount: finalTotal,
           shipping_address: `${form.address}, ${form.city}, ${form.postalCode}`,
-          payment_method: form.paymentMethod, // This is order's payment method
-          payment_status: 'pending', // Initial status for new orders
+          payment_method: form.paymentMethod,
+          payment_status: 'pending',
         },
         order_items: items.map(item => ({
-          product_id: item.id, // Assuming item.id is the product_id (UUID)
+          product_id: item.id,
           quantity: item.count,
           price: item.price
         }))
       };
 
-      // Make the API call to create the order
       const response = await axios.post(ORDERS_API_URL, orderData);
 
       if (response.status === 201 || response.status === 200) {
         setModal({ message: "Order Placed Successfully!", type: "success" });
-        clearCart(); setTimeout(() => {
-          setModal(null); 
-          navigate('/'); // Navigate to home or order confirmation page
-        }, 2000);
+        clearCart();
+        setTimeout(() => {
+          setModal(null);
+          navigate('/');
+        }, 2500); // Increased delay to allow animation to play
       } else {
-        // Handle unexpected successful status codes
         setModal({ message: `Order placement failed: ${response.data.message || 'Unknown error'}`, type: "error" });
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      // More specific error messages based on error.response
       let errorMessage = "Failed to place order. Please try again.";
       if (error.response && error.response.data && error.response.data.message) {
         errorMessage = error.response.data.message;
@@ -234,13 +250,13 @@ const Checkout = () => {
       }
       setModal({ message: errorMessage, type: "error" });
     } finally {
-      setIsSubmitting(false); // End submission loading
+      setIsSubmitting(false);
     }
   };
 
   if (loading) return <SkeletonLoader />;
 
-  if (items.length === 0 && !modal) { // Only show empty cart if no modal is active
+  if (items.length === 0 && !modal) {
     return (
       <div className="bg-black min-h-screen flex flex-col items-center justify-center">
         <div className="text-white text-3xl font-bold mb-5">
@@ -502,7 +518,7 @@ const Checkout = () => {
             <div className="mt-8 space-y-4">
               <button
                 onClick={handleSubmit}
-                disabled={items.length === 0 || !isFormComplete() || isSubmitting} // Disable during submission
+                disabled={items.length === 0 || !isFormComplete() || isSubmitting}
                 className={`w-full font-bold py-3 rounded-xl shadow-xl transition-all duration-300 transform active:translate-y-0 relative
                   ${
                     items.length === 0 || !isFormComplete() || isSubmitting

@@ -46,7 +46,7 @@ function Products(props) {
     };
 
     fetchProducts();
-  }); // Empty dependency array means this runs once on mount
+  },[]); // Empty dependency array means this runs once on mount
 
   // Handle category changes
   const handleCategoryChange = (newCategory) => {
