@@ -19,13 +19,14 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://pods-store.vercel.app",
     credentials: true,
   })
 );
+
 app.use(
   session({
-    secret: "superSecretSessionKey",
+    secret: process.env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: {
