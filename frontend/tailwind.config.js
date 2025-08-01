@@ -8,7 +8,7 @@ module.exports = {
         poppins: ['Poppins', 'sans-serif'],
       },
       screens: {
-        laptop: '976px', // Custom breakpoint for tablet-to-laptop range
+        laptop: '976px',  
       },
     },
   },

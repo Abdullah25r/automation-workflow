@@ -35,8 +35,8 @@ const ProductCard = (props) => {
           type="button"
           className="text-black bg-white text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 inline-flex justify-center items-center border border-[#64748b] rounded-md hover:bg-[#1a1a1a] hover:text-white transition duration-250 ease-in-out font-medium w-full sm:w-auto"
           onClick={() => {
-            addProduct(props); // Add product to cart
-            openCart(); // Open the cart sidebar
+            addProduct(props); 
+            openCart(); 
           }}
         >
           <svg

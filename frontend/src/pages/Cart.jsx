@@ -25,7 +25,7 @@ function Cart({ isOpen, onClose }) {
     }
 
     return () => {
-      document.body.style.overflow = "auto"; // Clean up
+      document.body.style.overflow = "auto"; 
     };
   }, [isOpen]);
 
