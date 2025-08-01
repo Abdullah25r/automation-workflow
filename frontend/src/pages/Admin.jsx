@@ -12,7 +12,6 @@ const Admin = () => {
     setError("");
     setSuccess("");
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); // Set loading to true when submission starts

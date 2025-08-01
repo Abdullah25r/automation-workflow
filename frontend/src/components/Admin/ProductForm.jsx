@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {baseURL} from '../../Api/productapi'
+import { baseURL } from '../../Api/productapi';
+
 const ProductForm = ({
   mode = "add",
   initialData = null,
@@ -13,13 +14,40 @@ const ProductForm = ({
     price: "",
     image: "",
     category: "",
+    color: "",
+    features: "",
+    discount_price: "",
   });
 
-  const [uploading, setUploading] = useState(false);
-  
+  const [uploading, setUploading] = useState(false); // For image upload
+  const [submitting, setSubmitting] = useState(false); // For form submission
+
   useEffect(() => {
     if (mode === "edit" && initialData) {
-      setFormData(initialData);
+      setFormData({
+        name: initialData.name || "",
+        description: initialData.description || "",
+        price: initialData.price || "",
+        image: initialData.image || "",
+        category: initialData.category || "",
+        color: initialData.color || "",
+        features: initialData.features || "",
+        discount_price: initialData.discount_price !== null && initialData.discount_price !== undefined
+          ? String(initialData.discount_price)
+          : "",
+      });
+    } else if (mode === "add") {
+      // Reset form data when switching to 'add' mode or initial load
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        image: "",
+        category: "",
+        color: "",
+        features: "",
+        discount_price: "",
+      });
     }
   }, [mode, initialData]);
 
@@ -27,13 +55,14 @@ const ProductForm = ({
     const { name, value, files } = e.target;
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
+
     if (name === "image" && files?.[0]) {
       const file = files[0];
       const formDataCloud = new FormData();
       formDataCloud.append("file", file);
       formDataCloud.append("upload_preset", uploadPreset);
 
-      setUploading(true);
+      setUploading(true); // Start image upload loader
 
       try {
         const res = await axios.post(
@@ -54,33 +83,51 @@ const ProductForm = ({
         );
         alert("Image upload failed.");
       } finally {
-        setUploading(false);
+        setUploading(false); // End image upload loader
       }
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      if (name === "price" || name === "discount_price") {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: value === "" ? "" : Number(value),
+        }));
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setSubmitting(true); // Start form submission loader
+
     try {
       console.log("Submitting:", formData);
 
+      const dataToSend = {
+        ...formData,
+        price: Number(formData.price),
+        discount_price: formData.discount_price === "" ? null : Number(formData.discount_price),
+        color: formData.color || null,
+        features: formData.features || null,
+      };
+
       if (mode === "edit") {
         await axios.put(
-          `${baseURL}/api/products/${formData.id}`,
-          formData
+          `${baseURL}/api/products/${initialData.product_id}`,
+          dataToSend
         );
         alert("Product updated successfully!");
       } else {
         await axios.post(
           `${baseURL}/api/products`,
-          formData
+          dataToSend
         );
         alert("Product added successfully!");
       }
 
+      // Reset form only on successful add
       if (mode === "add") {
         setFormData({
           name: "",
@@ -88,6 +135,9 @@ const ProductForm = ({
           price: "",
           image: "",
           category: "",
+          color: "",
+          features: "",
+          discount_price: "",
         });
       }
 
@@ -95,6 +145,8 @@ const ProductForm = ({
     } catch (error) {
       console.error("Submit error:", error.response?.data || error);
       alert(`Failed to ${mode === "edit" ? "update" : "add"} product.`);
+    } finally {
+      setSubmitting(false); // End form submission loader
     }
   };
 
@@ -124,8 +176,32 @@ const ProductForm = ({
         onChange={handleChange}
         placeholder="Price"
         type="number"
+        step="0.01"
         className="w-full p-2 bg-black text-white rounded"
         required
+      />
+      <input
+        name="color"
+        value={formData.color}
+        onChange={handleChange}
+        placeholder="Color (e.g., Black, Silver)"
+        className="w-full p-2 bg-black text-white rounded"
+      />
+      <textarea
+        name="features"
+        value={formData.features}
+        onChange={handleChange}
+        placeholder="Features (e.g., '16GB RAM, 512GB SSD')"
+        className="w-full p-2 bg-black text-white rounded"
+      />
+      <input
+        name="discount_price"
+        value={formData.discount_price}
+        onChange={handleChange}
+        placeholder="Discount Price (Optional)"
+        type="number"
+        step="0.01"
+        className="w-full p-2 bg-black text-white rounded"
       />
       <select
         name="category"
@@ -148,7 +224,7 @@ const ProductForm = ({
         accept="image/*"
         onChange={handleChange}
         className="w-full p-2 bg-black text-white rounded"
-        required={!formData.image}
+        required={!formData.image && mode === "add"}
       />
       {formData.image?.trim() && (
         <img
@@ -160,19 +236,30 @@ const ProductForm = ({
       <div className="flex gap-4">
         <button
           type="submit"
-          disabled={uploading}
-          className={`px-4 py-2 rounded ${
-            uploading ? "bg-gray-500 cursor-not-allowed" : "bg-green-600"
-          }`}
+          // Disable button if uploading image or submitting form
+          disabled={uploading || submitting}
+          className={`px-4 py-2 rounded flex items-center justify-center gap-2 ${
+            (uploading || submitting) ? "bg-gray-500 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+          } text-white font-semibold`}
         >
-          {uploading
-            ? "Uploading..."
-            : `${mode === "edit" ? "Update" : "Add"} Product`}
+          {(uploading || submitting) ? (
+            <>
+              {/* Simple SVG Spinner */}
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.088 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {uploading ? "Uploading Image..." : `${mode === "edit" ? "Updating..." : "Adding..."}`}
+            </>
+          ) : (
+            `${mode === "edit" ? "Update" : "Add"} Product`
+          )}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="bg-gray-600 px-4 py-2 rounded"
+          disabled={submitting} // Disable cancel button too during submission
+          className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded text-white font-semibold"
         >
           Cancel
         </button>

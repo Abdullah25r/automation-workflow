@@ -1,7 +1,6 @@
 import { pool } from "../utils/pool.js";
 
-// func to get all products from db
-
+// func to get all products from db (already good, includes category name)
 export async function getProducts(req, res) {
   try {
     const result = await pool.query(`
@@ -10,16 +9,17 @@ export async function getProducts(req, res) {
       JOIN categories ON p.category_id = categories.category_id
       ORDER BY p.product_id DESC
     `);
-    res.status(200).json(result.rows);
+      res.status(200).json(result.rows);
   } catch (error) {
     console.error("Get products error:", error);
     res.status(500).json({ error: "Failed to fetch products" });
   }
 }
 
-//this will add products to database
+// this will add products to database
 export async function addProducts(req, res) {
-  const { category, name, price, description, image } = req.body;
+  // Destructure all expected fields, including the new ones
+  const { category, name, price, description, image, color, features, discount_price } = req.body;
 
   try {
     const categoryResult = await pool.query(
@@ -31,9 +31,13 @@ export async function addProducts(req, res) {
       return res.status(400).json({ error: "Invalid category name" });
     }
     const categoryId = categoryResult.rows[0].category_id;
+
     const insertQuery = `
-      INSERT INTO products (category_id, name, price, description, image)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO products (
+        category_id, name, price, description, image,
+        color, features, discount_price  -- New columns added here
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) -- Corresponding new placeholders
       RETURNING *;
     `;
     const result = await pool.query(insertQuery, [
@@ -42,6 +46,11 @@ export async function addProducts(req, res) {
       price,
       description,
       image,
+      color || null,          // If color is undefined or empty string, insert NULL
+      features || null,       // If features is undefined or empty string, insert NULL
+      // If discount_price is undefined in req.body, set to NULL. Otherwise, use its value.
+      // This allows explicit null or a number to be passed.
+      discount_price === undefined ? null : discount_price,
     ]);
 
     res.status(201).json({
@@ -53,6 +62,7 @@ export async function addProducts(req, res) {
     res.status(500).json({ error: "Failed to add product" });
   }
 }
+
 export async function deleteProduct(req, res) {
   const { id } = req.params;
   try {
@@ -69,10 +79,13 @@ export async function deleteProduct(req, res) {
     res.status(500).json({ error: "Failed to delete product" });
   }
 }
-//update a product
+
+// update a product
 export async function updateProduct(req, res) {
   const { id } = req.params;
-  const { name, description, price, image, category } = req.body;
+  // Destructure all expected fields from req.body, including the new ones.
+  // Note: For this non-dynamic update, all these fields are expected in the request body.
+  const { name, description, price, image, category, color, features, discount_price } = req.body;
 
   try {
     const categoryResult = await pool.query(
@@ -85,6 +98,7 @@ export async function updateProduct(req, res) {
     }
 
     const categoryId = categoryResult.rows[0].category_id;
+
     const updateQuery = `
       UPDATE products
       SET name = $1,
@@ -92,8 +106,11 @@ export async function updateProduct(req, res) {
           price = $3,
           image = $4,
           category_id = $5,
+          color = $6,          -- New column
+          features = $7,       -- New column
+          discount_price = $8, -- New column
           updated_at = CURRENT_TIMESTAMP
-      WHERE product_id = $6
+      WHERE product_id = $9    -- product_id for WHERE clause
       RETURNING *;
     `;
 
@@ -103,7 +120,11 @@ export async function updateProduct(req, res) {
       price,
       image,
       categoryId,
-      id,
+      color || null,          // If color is undefined or empty string, update to NULL
+      features || null,       // If features is undefined or empty string, update to NULL
+      // If discount_price is undefined in req.body, update to NULL. Otherwise, use its value.
+      discount_price === undefined ? null : discount_price,
+      id, // The product_id for the WHERE clause
     ]);
 
     if (result.rowCount === 0) {
@@ -120,12 +141,16 @@ export async function updateProduct(req, res) {
   }
 }
 
-// function get a specific details
+// function get a specific product details
 export async function getSpecificProduct(req, res) {
   const product_id = req.params.id;
   try {
+    // Modified to join with categories to get the category name
     const result = await pool.query(
-      `SELECT * FROM products WHERE product_id = $1`,
+      `SELECT p.*, c.name AS category
+       FROM products p
+       JOIN categories c ON p.category_id = c.category_id
+       WHERE p.product_id = $1`,
       [product_id]
     );
     if (result.rows.length > 0) {
