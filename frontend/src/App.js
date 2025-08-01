@@ -16,6 +16,7 @@ import MobileCart from "./pages/MobileCart";
 import Checkout from "./pages/Checkout";
 import FAQs from "./components/FAQs";
 import { Toaster } from "react-hot-toast";
+import WhatsAppButton  from "./components/WhatsAppButton";
 
 import Admin from "./pages/Admin";
 function App() {
@@ -80,6 +81,7 @@ function App() {
           }}
         />
       </div>
+      <WhatsAppButton />
       {!hideLayout && <Footer />}
     </div>
   );
