@@ -24,6 +24,11 @@ function App() {
   const hideLayout = location.pathname.startsWith("/dashboard");
   const hidecheckoutnav = location.pathname.startsWith("/checkout");
   const hidecheckoutadmin = location.pathname.startsWith("/admin");
+
+const hideWhatsApp =
+    location.pathname.startsWith("/dashboard") ||
+    location.pathname.startsWith("/admin");
+
   return (
     <div className="min-h-screen text-white bg-black">
       {!hideLayout && !hidecheckoutnav && !hidecheckoutadmin && <Navbar />}
@@ -81,7 +86,7 @@ function App() {
           }}
         />
       </div>
-      <WhatsAppButton />
+      {!hideWhatsApp && <WhatsAppButton />}
       {!hideLayout && <Footer />}
     </div>
   );
