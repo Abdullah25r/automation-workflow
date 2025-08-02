@@ -16,6 +16,7 @@ import MobileCart from "./pages/MobileCart";
 import Checkout from "./pages/Checkout";
 import FAQs from "./components/FAQs";
 import { Toaster } from "react-hot-toast";
+import WhatsAppButton  from "./components/WhatsAppButton";
 
 import Admin from "./pages/Admin";
 function App() {
@@ -23,6 +24,11 @@ function App() {
   const hideLayout = location.pathname.startsWith("/dashboard");
   const hidecheckoutnav = location.pathname.startsWith("/checkout");
   const hidecheckoutadmin = location.pathname.startsWith("/admin");
+
+const hideWhatsApp =
+    location.pathname.startsWith("/dashboard") ||
+    location.pathname.startsWith("/admin");
+
   return (
     <div className="min-h-screen text-white bg-black">
       {!hideLayout && !hidecheckoutnav && !hidecheckoutadmin && <Navbar />}
@@ -80,6 +86,7 @@ function App() {
           }}
         />
       </div>
+      {!hideWhatsApp && <WhatsAppButton />}
       {!hideLayout && <Footer />}
     </div>
   );
