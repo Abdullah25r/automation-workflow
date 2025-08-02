@@ -98,7 +98,7 @@ const ProductList = ({ data = [], title = "Products", refetchProducts }) => {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDeleteClick(product.id)}
+                  onClick={() => handleDeleteClick(product.product_id)}
                   className="bg-red-600 text-white px-3 py-1 rounded mt-2"
                 >
                   Delete
