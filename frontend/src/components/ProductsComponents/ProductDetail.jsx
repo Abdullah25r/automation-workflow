@@ -214,7 +214,7 @@ function ProductDetail() {
       </div>
       {/* Pass the product ID (UUID) to ProductReviews */}
       {/* Ensure product.product_id is correctly accessed, assuming backend returns 'product_id' */}
-      <ProductReviews productId={product.product_id} />
+      <ProductReviews id={product.product_id} />
     </div>
   );
 }
