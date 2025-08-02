@@ -222,7 +222,7 @@ const Checkout = () => {
           payment_status: 'pending',
         },
         order_items: items.map(item => ({
-          product_id: item.id,
+          product_id: item.id || item.product_id,
           quantity: item.count,
           price: item.price
         }))
