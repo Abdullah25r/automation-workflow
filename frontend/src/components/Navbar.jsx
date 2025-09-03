@@ -119,10 +119,10 @@ function Navbar() {
               Products
             </Link>
             <Link
-              to="/devices"
+              to="/about"
               className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
             >
-              Smart Watches
+              About
             </Link>
             <Link
               to="/news"

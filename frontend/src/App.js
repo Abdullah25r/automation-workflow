@@ -5,13 +5,13 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import News from "./pages/News";
 import Devices from "./pages/Devices";
-import AboutTimePods from "./components/AboutTimePods";
 import ReturnRefundPolicy from "./components/ReturnRefundPolicy";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
 import Dashboard from "./pages/Dashboard";
+import About from "./pages/About"
 import MobileCart from "./pages/MobileCart";
 import Checkout from "./pages/Checkout";
 import FAQs from "./components/FAQs";
@@ -39,8 +39,8 @@ const hideWhatsApp =
           <Route path="/news" element={<News />} />
           <Route path="/devices" element={<Devices />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/about" element={<About />} />
           <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/about" element={<AboutTimePods />} />
           <Route path="/return-refund" element={<ReturnRefundPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsAndConditions />} />
