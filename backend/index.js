@@ -8,7 +8,7 @@ import productRoutes from "./routes/productRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import checkoutRoutes from "./routes/checkoutRoutes.js";
 import productDetailRoutes from "./routes/productDetailRoutes.js";
-
+import commentRoutes from './routes/commentRoutes.js'
 // Load environment variables from .env file for local development
 env.config();
 
@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 3001; // Use Railway's port or default to 3001
 
 // Define allowed origins for CORS. This is secure and explicit.
 const allowedOrigins = [
-  "http://localhost:3000", // For your local development (if you use this port)
-  "https://pods-store.vercel.app", // Your Vercel production frontend
+  "http://localhost:3000", 
+  "https://pods-store.vercel.app", 
   // You can add more Vercel preview domains here if needed
 ];
 
@@ -28,7 +28,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(morgan("dev"));
 
-// Trust the proxy (Railway's load balancer) for secure cookies
 app.set("trust proxy", 1);
 
 // CORS middleware configuration
@@ -47,7 +46,6 @@ app.use(
   })
 );
 
-// Session middleware for secure session management
 app.use(
   session({
     secret: process.env.SESSION_SECRET_KEY,
@@ -67,7 +65,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/productdetails", productDetailRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/checkout", checkoutRoutes);
-
+app.use('/api/comments',commentRoutes)
 app.listen(PORT, () => {
   console.log(`Server is listening on the port ${PORT}`);
 });

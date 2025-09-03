@@ -79,15 +79,26 @@ export async function deleteProduct(req, res) {
     res.status(500).json({ error: "Failed to delete product" });
   }
 }
+//helper function
+const safeToNumber = (value) => {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+  const num = Number(value);
+  // Return null if the conversion results in a non-numeric value (NaN)
+  return isNaN(num) ? null : num;
+};
 
-// update a product
+// The main handler function for updating a product.
 export async function updateProduct(req, res) {
   const { id } = req.params;
-  // Destructure all expected fields from req.body, including the new ones.
-  // Note: For this non-dynamic update, all these fields are expected in the request body.
-  const { name, description, price, image, category, color, features, discount_price } = req.body;
+  const { name, description, image, category } = req.body;
+  
+  // Extract and safely process the fields that can be null or empty
+  const { price, color, features, discount_price } = req.body;
 
   try {
+    // 1. Validate the category exists before proceeding
     const categoryResult = await pool.query(
       "SELECT category_id FROM categories WHERE name = $1",
       [category]
@@ -99,6 +110,16 @@ export async function updateProduct(req, res) {
 
     const categoryId = categoryResult.rows[0].category_id;
 
+    // 2. Safely convert the price fields using our helper function
+    const safePrice = safeToNumber(price);
+    const safeDiscountPrice = safeToNumber(discount_price);
+
+    // If the price is not a valid number, we return a clear error.
+    if (safePrice === null) {
+      return res.status(400).json({ error: "Price must be a valid number." });
+    }
+
+    // 3. Construct the UPDATE query
     const updateQuery = `
       UPDATE products
       SET name = $1,
@@ -106,41 +127,44 @@ export async function updateProduct(req, res) {
           price = $3,
           image = $4,
           category_id = $5,
-          color = $6,          -- New column
-          features = $7,       -- New column
-          discount_price = $8, -- New column
+          color = $6,
+          features = $7,
+          discount_price = $8,
           updated_at = CURRENT_TIMESTAMP
-      WHERE product_id = $9    -- product_id for WHERE clause
+      WHERE product_id = $9
       RETURNING *;
     `;
 
+    // 4. Execute the query with the validated and sanitized data
     const result = await pool.query(updateQuery, [
       name,
       description,
-      price,
+      safePrice,            // Use the validated number
       image,
       categoryId,
-      color || null,          // If color is undefined or empty string, update to NULL
-      features || null,       // If features is undefined or empty string, update to NULL
-      // If discount_price is undefined in req.body, update to NULL. Otherwise, use its value.
-      discount_price === undefined ? null : discount_price,
-      id, // The product_id for the WHERE clause
+      color || null,        // Handle empty strings as NULL
+      features || null,     // Handle empty strings as NULL
+      safeDiscountPrice,    // Use the validated number or NULL
+      id,
     ]);
 
+    // 5. Handle cases where the product ID was not found
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Product not found" });
     }
 
+    // 6. Return a success message and the updated product
     return res.status(200).json({
       message: "Product updated successfully",
       product: result.rows[0],
     });
   } catch (error) {
+    // Log the full error to the console for detailed debugging
     console.error("Update product error details:", error);
+    // Return a generic error to the frontend
     return res.status(500).json({ error: "Failed to update product" });
   }
 }
-
 // function get a specific product details
 export async function getSpecificProduct(req, res) {
   const product_id = req.params.id;

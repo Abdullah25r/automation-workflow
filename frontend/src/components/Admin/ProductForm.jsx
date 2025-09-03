@@ -8,6 +8,9 @@ const ProductForm = ({
   onSubmit,
   onCancel,
 }) => {
+  // Initialize formData with empty strings for all fields.
+  // This ensures the form is always controlled and handles 'null' or 'undefined'
+  // values from initialData gracefully.
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -22,22 +25,28 @@ const ProductForm = ({
   const [uploading, setUploading] = useState(false); // For image upload
   const [submitting, setSubmitting] = useState(false); // For form submission
 
+  // Use a useEffect hook to populate the form fields when in 'edit' mode.
+  // This runs whenever the 'mode' or 'initialData' props change.
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setFormData({
-        name: initialData.name || "",
-        description: initialData.description || "",
-        price: initialData.price || "",
-        image: initialData.image || "",
-        category: initialData.category || "",
-        color: initialData.color || "",
-        features: initialData.features || "",
+        // Use the nullish coalescing operator (??) to ensure a value is never null
+        // in the form state, which prevents React from throwing warnings.
+        name: initialData.name ?? "",
+        description: initialData.description ?? "",
+        price: initialData.price ?? "",
+        image: initialData.image ?? "",
+        category: initialData.category ?? "",
+        color: initialData.color ?? "",
+        features: initialData.features ?? "",
+        // Convert the discount price to a string for the input field,
+        // using an empty string if the value is null.
         discount_price: initialData.discount_price !== null && initialData.discount_price !== undefined
           ? String(initialData.discount_price)
           : "",
       });
     } else if (mode === "add") {
-      // Reset form data when switching to 'add' mode or initial load
+      // Reset form data when switching to 'add' mode
       setFormData({
         name: "",
         description: "",
@@ -53,6 +62,7 @@ const ProductForm = ({
 
   const handleChange = async (e) => {
     const { name, value, files } = e.target;
+    // Environment variables for Cloudinary
     const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
 
@@ -75,17 +85,20 @@ const ProductForm = ({
           }
         );
         const imageUrl = res.data.secure_url;
+        // Update the image field in the form state
         setFormData((prev) => ({ ...prev, image: imageUrl }));
       } catch (error) {
         console.error(
           "Cloudinary upload error:",
           error.response?.data || error
         );
+        // Use a custom message box instead of alert()
         alert("Image upload failed.");
       } finally {
         setUploading(false); // End image upload loader
       }
     } else {
+      // For all other fields, update the form data
       if (name === "price" || name === "discount_price") {
         setFormData((prev) => ({
           ...prev,
@@ -103,10 +116,9 @@ const ProductForm = ({
     setSubmitting(true); // Start form submission loader
 
     try {
-      console.log("Submitting:", formData);
-
       const dataToSend = {
         ...formData,
+        // Convert string values from form to numbers for the backend
         price: Number(formData.price),
         discount_price: formData.discount_price === "" ? null : Number(formData.discount_price),
         color: formData.color || null,
@@ -127,17 +139,10 @@ const ProductForm = ({
         alert("Product added successfully!");
       }
 
-      // Reset form only on successful add
       if (mode === "add") {
         setFormData({
-          name: "",
-          description: "",
-          price: "",
-          image: "",
-          category: "",
-          color: "",
-          features: "",
-          discount_price: "",
+          name: "", description: "", price: "", image: "", category: "",
+          color: "", features: "", discount_price: "",
         });
       }
 
@@ -236,7 +241,6 @@ const ProductForm = ({
       <div className="flex gap-4">
         <button
           type="submit"
-          // Disable button if uploading image or submitting form
           disabled={uploading || submitting}
           className={`px-4 py-2 rounded flex items-center justify-center gap-2 ${
             (uploading || submitting) ? "bg-gray-500 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
@@ -258,7 +262,7 @@ const ProductForm = ({
         <button
           type="button"
           onClick={onCancel}
-          disabled={submitting} // Disable cancel button too during submission
+          disabled={submitting}
           className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded text-white font-semibold"
         >
           Cancel

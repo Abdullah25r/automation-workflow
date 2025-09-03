@@ -6,6 +6,7 @@ import Main from "./Main";
 import OrdersTable from "./Orders/OrdersTable";
 import CustomersList from "./Customers/CustomersList";
 import { baseURL } from "../../Api/productapi";
+
 const DashboardContent = ({ selected }) => {
   const lowerSelected = selected.toLowerCase();
   const [products, setProducts] = useState([]);
@@ -14,13 +15,21 @@ const DashboardContent = ({ selected }) => {
   const fetchProducts = async () => {
     try {
       const res = await axios.get(`${baseURL}/api/products/`);
+      
+      // --- CORRECTED MAPPING ---
+      // Map all fields from the backend response, keeping the original
+      // product_id key and including the new fields.
       const data = res.data.map((p) => ({
-        id: p.product_id,
+        product_id: p.product_id, // Keep the original key for ProductForm
         name: p.name,
         description: p.description,
         price: parseFloat(p.price),
         image: p.image,
         category: p.category.toLowerCase(),
+        color: p.color, // Include the new field
+        features: p.features, // Include the new field
+        // Parse the discount price
+        discount_price: parseFloat(p.discount_price), // Include the new field
       }));
       setProducts(data);
     } catch (err) {
@@ -64,7 +73,7 @@ const DashboardContent = ({ selected }) => {
       case "orders":
         return <OrdersTable />;
       case "customers":
-        return <CustomersList/>;
+        return <CustomersList />;
       case "analytics":
       case "setting":
         return <p className="p-4">Section under construction.</p>;
