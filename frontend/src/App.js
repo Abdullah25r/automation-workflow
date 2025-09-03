@@ -9,6 +9,7 @@ import ReturnRefundPolicy from "./components/ReturnRefundPolicy";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsAndConditions from "./components/TermsConditions";
 import Cart from "./pages/Cart";
+import Contact from "./pages/ContactUs";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About"
@@ -40,6 +41,7 @@ const hideWhatsApp =
           <Route path="/devices" element={<Devices />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/return-refund" element={<ReturnRefundPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

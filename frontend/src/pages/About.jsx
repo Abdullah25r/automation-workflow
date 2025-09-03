@@ -152,13 +152,13 @@ const AboutPage = () => {
         <div className="relative z-10 text-center px-6 max-w-4xl">
           <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-tight">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">About</span>
-            <span className="block mt-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">AirPods</span>
+            <span className="block mt-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">Us</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
             The future of personal audio is coming soon. Join us on our journey to revolutionize wireless listening.
           </p>
           <button className="bg-gradient-to-r from-blue-500 to-cyan-500 px-8 py-4 rounded-full font-semibold text-lg hover:from-blue-600 hover:to-cyan-600 transition-all transform hover:-translate-y-1">
-            Join Waitlist
+            Join us
           </button>
         </div>
       </section>
