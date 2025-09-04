@@ -2,22 +2,20 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import { HiOutlineX } from "react-icons/hi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FiShoppingCart } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import Cart from "../pages/Cart";
-import { cartContext } from "../Context/CartContext"; // This context now includes UI state
+import { cartContext } from "../Context/CartContext";
 import { ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  // Removed local isCartOpen state and its handlers.
-  // Now we get them from cartContext.
+  const { items, isCartOpen, openCart, closeCart } = useContext(cartContext);
   const navigate = useNavigate();
+  const location = useLocation(); // Get current location
   const menuRef = useRef();
   const hamburgerRef = useRef();
 
-  // Get all cart-related state and functions from the combined context
-  const { items, isCartOpen, openCart, closeCart } = useContext(cartContext);
   const cartCount = items.reduce((acc, item) => acc + item.count, 0);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -42,7 +40,12 @@ function Navbar() {
     };
   }, [menuOpen]);
 
-  // Animation variants (unchanged)
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  // Animation variants
   const menuContainerVariants = {
     hidden: {
       opacity: 0,
@@ -89,6 +92,14 @@ function Navbar() {
     closed: { rotate: 0, scale: 1 }
   };
 
+  // Function to check if a path is active
+  const isActivePath = (path) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <header className="sticky top-2 z-50 bg-gradient-to-r from-[#1a1a1a] to-[#000000] text-[#ced4da] px-4 sm:px-6 md:px-6 shadow-md laptop:mx-7 rounded-xl mx-2">
       <div className="max-w-7xl mx-auto py-3 md:py-4 laptop:py-4">
@@ -106,30 +117,50 @@ function Navbar() {
           </Link>
 
           <nav className="flex gap-6 text-sm laptop:text-[16px] font-poppins font-medium">
-            <Link
+            <NavLink
               to="/"
-              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+              onClick={() => {window.scrollTo(0,0)}}
+              className={({ isActive }) => 
+                `hover:text-white transition p-2 rounded-md ${
+                  isActive ? "bg-[#2a2a2a] text-white" : "hover:bg-[#1a1a1a]"
+                }`
+              }
             >
               Home
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/Products"
-              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+              onClick={() => {window.scrollTo(0,0)}}
+              className={({ isActive }) => 
+                `hover:text-white transition p-2 rounded-md ${
+                  isActive ? "bg-[#2a2a2a] text-white" : "hover:bg-[#1a1a1a]"
+                }`
+              }
             >
               Products
-            </Link>
-            <Link
-              to="/devices"
-              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+            </NavLink>
+            <NavLink
+              to="/about"
+              onClick={() => {window.scrollTo(0,0)}}
+              className={({ isActive }) => 
+                `hover: text-white transition p-2 rounded-md ${
+                  isActive ? "bg-[#2a2a2a] text-white" : "hover:bg-[#1a1a1a]"
+                }`
+              }
             >
-              Smart Watches
-            </Link>
-            <Link
-              to="/news"
-              className="hover:text-white transition hover:bg-[#1a1a1a] p-2 rounded-md"
+              About
+            </NavLink>
+            <NavLink
+              to="/contact"
+              onClick={() => {window.scrollTo(0,0)}}
+              className={({ isActive }) => 
+                `hover:text-white transition p-2 rounded-md ${
+                  isActive ? "bg-[#2a2a2a] text-white" : "hover:bg-[#1a1a1a]"
+                }`
+              }
             >
-              Accessories
-            </Link>
+              Contact
+            </NavLink>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -149,7 +180,6 @@ function Navbar() {
                   </span>
                 )}
               </button>
-              {/* Pass isCartOpen and closeCart from cartContext to Cart */}
               <Cart isOpen={isCartOpen} onClose={closeCart} />
             </div>
           </div>
@@ -193,12 +223,11 @@ function Navbar() {
                 </span>
               )}
             </button>
-            {/* Pass isCartOpen and closeCart from cartContext to Cart */}
             <Cart isOpen={isCartOpen} onClose={closeCart} />
           </div>
         </div>
 
-        {/* Animated Mobile Menu (unchanged) */}
+        {/* Animated Mobile Menu */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
@@ -219,7 +248,11 @@ function Navbar() {
                 <motion.div variants={menuItemVariants}>
                   <Link
                     to="/"
-                    className="block hover:text-white transition p-2 rounded-md"
+                    className={`block transition p-2 rounded-md ${
+                      isActivePath("/") 
+                        ? "bg-[#2a2a2a] text-white" 
+                        : "hover:text-white hover:bg-[#1a1a1a]"
+                    }`}
                     onClick={toggleMenu}
                   >
                     Home
@@ -228,7 +261,11 @@ function Navbar() {
                 <motion.div variants={menuItemVariants}>
                   <Link
                     to="/Products"
-                    className="block hover:text-white transition p-2 rounded-md"
+                    className={`block transition p-2 rounded-md ${
+                      isActivePath("/Products") 
+                        ? "bg-[#2a2a2a] text-white" 
+                        : "hover:text-white hover:bg-[#1a1a1a]"
+                    }`}
                     onClick={toggleMenu}
                   >
                     Products
@@ -236,20 +273,28 @@ function Navbar() {
                 </motion.div>
                 <motion.div variants={menuItemVariants}>
                   <Link
-                    to="/devices"
-                    className="block hover:text-white transition p-2 rounded-md"
+                    to="/about"
+                    className={`block transition p-2 rounded-md ${
+                      isActivePath("/about") 
+                        ? "bg-[#2a2a2a] text-white" 
+                        : "hover:text-white hover:bg-[#1a1a1a]"
+                    }`}
                     onClick={toggleMenu}
                   >
-                    Smart Watches
+                    About
                   </Link>
                 </motion.div>
                 <motion.div variants={menuItemVariants}>
                   <Link
-                    to="/news"
-                    className="block hover:text-white transition p-2 rounded-md"
+                    to="/contact"
+                    className={`block transition p-2 rounded-md ${
+                      isActivePath("/contact") 
+                        ? "bg-[#2a2a2a] text-white" 
+                        : "hover:text-white hover:bg-[#1a1a1a]"
+                    }`}
                     onClick={toggleMenu}
                   >
-                    Accessories
+                    Contact
                   </Link>
                 </motion.div>
                 <motion.div variants={menuItemVariants}>
