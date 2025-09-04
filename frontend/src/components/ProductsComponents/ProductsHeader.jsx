@@ -11,7 +11,7 @@ function ProductsHeader({ onCategorySelect }) {
 
   return (
     <div className="flex flex-col items-center mt-20 mb-20">
-      <h2 className="text-6xl font-semibold font-poppins pb-3 mb-14 md:mb-10 sm:mb-10 bg-gradient-to-b from-white to-cyan-900 bg-clip-text text-transparent">
+      <h2 className="text-6xl font-semibold font-poppins pb-3 mb-14 md:mb-10 sm:mb-10 bg-gradient-to-r from-cyan-400 via-cyan-600 to-sky-400 bg-clip-text text-transparent">
         Categories
       </h2>
       <div className="flex justify-center gap-20 flex-wrap">

@@ -30,7 +30,7 @@ function Testimonial() {
       {/* Heading */}
       <h2 className="text-center font-poppins my-20 text-xl md:text-6xl font-bold text-white">
         What our{" "}
-        <span className="bg-gradient-to-b from-white to-cyan-900 bg-clip-text text-transparent">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-600 to-sky-400">
           Customers{" "}
         </span>
         Says

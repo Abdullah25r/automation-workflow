@@ -4,7 +4,7 @@ function Productsheading() {
   return (
     <div>
   <h1 className="text-center font-poppins my-20 text-6xl md:text-8xl font-bold text-white">
-    Products To <span className="bg-gradient-to-b from-white to-cyan-900 bg-clip-text text-transparent">Explore</span>
+    Products To <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-600 to-sky-400">Explore</span>
   </h1>
 </div>
 
