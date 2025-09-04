@@ -3,10 +3,10 @@
 function ProductsHeader({ onCategorySelect }) {
 
   const categories = [
-    { name: "Watch", image: "./img/w-7.webp" },
-    { name: "Headphone", image: "./img/headphone-1.webp" },
-    { name: "Pods", image: "./img/pods1.webp" },
-    { name: "Extras", image: "./img/speaker.webp" },
+    { name: "watch", image: "./img/w-7.webp" },
+    { name: "headphones", image: "./img/headphone-1.webp" },
+    { name: "pods", image: "./img/pods1.webp" },
+    { name: "extras", image: "./img/speaker.webp" },
   ];
 
   return (
