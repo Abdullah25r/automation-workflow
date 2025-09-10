@@ -28,7 +28,7 @@ const ProductCard = (props) => {
       {/* Price + Buy Button Section */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-5 gap-2">
         <span className="font-semibold text-white text-center sm:text-left">
-          ${props.price}
+          Rs.{Math.trunc(props.price).toLocaleString()}
         </span>
 
         <button
