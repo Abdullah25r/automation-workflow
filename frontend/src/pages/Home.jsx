@@ -10,7 +10,7 @@ import Testimonial from '../components/Testimonial'
 
 function Home() {
   return (
-    <div>
+    <div className = 'relative'>
       <Carousel />
       <Productsheading />
       <ExploreProduct />
