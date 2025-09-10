@@ -5,10 +5,17 @@ import { Link } from "react-router-dom";
 
 const ProductCard = (props) => {
   const { addProduct, openCart } = useContext(cartContext);
+  const handleLinkClick = () => {
+    // Scroll to top when the product link is clicked
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   return (
     <div className="w-full max-w-xs mx-auto bg-[#1a1a1a] p-4 sm:p-5 mt-3 rounded-lg shadow-md hover:-translate-y-2 transition-all hover:shadow-[#1a1a1a] duration-300">
-      <Link to={`/product/${props.id}`}>
+      <Link to={`/product/${props.id}`} onClick={handleLinkClick}>
         <div className="flex flex-col items-center cursor-pointer mb-5">
           <img
             src={props.path}

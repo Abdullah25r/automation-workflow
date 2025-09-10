@@ -2,62 +2,65 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "./ProductsComponents/ProductCard";
 import LatestProductSkeleton from "./LatestProductSkeleton";
-import {Link , useNavigate} from "react-router-dom"
-
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:3000",
-  timeout: 10000,
-});
+import { useNavigate } from "react-router-dom";
 
 function LatestProducts() {
   const [latestProducts, setLatestProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [retryCount, setRetryCount] = useState(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const source = axios.CancelToken.source();
+  // Get the API base URL from environment variables
+  const apiBaseUrl = process.env.REACT_APP_API_URL;
 
+  useEffect(() => {
+    let isMounted = true;
+    
     const fetchLatestProducts = async () => {
       try {
         setIsLoading(true);
         setError(null);
-
-        const response = await api.get("/api/products/latest", {
-          cancelToken: source.token,
+        
+        // Use the environment variable for the API URL
+        const response = await axios.get(`${apiBaseUrl}/api/products/latest`, {
+          timeout: 10000
         });
-        setLatestProducts(response.data);
+        
+        if (isMounted) {
+          setLatestProducts(response.data);
+        }
       } catch (err) {
-        if (axios.isCancel(err)) {
-          console.log("Request canceled:", err.message);
-        } else {
+        if (isMounted) {
           console.error("Failed to fetch latest products:", err);
           let msg = "Failed to load latest products. Please try again later.";
+          
           if (err.response) {
-            msg = `Server error: ${err.response.status} - ${
-              err.response.data?.error || "Unknown error"
-            }`;
+            msg = "Server error: Unable to load products at this time";
           } else if (err.request) {
-            msg =
-              "Network error: Could not connect to server. Please check if your backend is running on " +
-              (process.env.REACT_APP_API_URL || "http://localhost:3000");
+            msg = "Network error: Unable to connect to the server";
+          } else if (err.code === 'ECONNABORTED') {
+            msg = "Request timeout: Please check your connection and try again";
           }
+          
           setError(msg);
         }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchLatestProducts();
+    
+    // Cleanup function to prevent state updates after component unmounts
     return () => {
-      source.cancel("Component unmounted, request canceled");
+      isMounted = false;
     };
-  }, [retryCount]);
+  }, [apiBaseUrl]); // Add apiBaseUrl as dependency
 
   const handleRetry = () => {
-    setRetryCount((prev) => prev + 1);
+    window.location.reload();
   };
 
   // Reduced top/bottom padding
@@ -81,12 +84,6 @@ function LatestProducts() {
     return (
       <section className={sectionClasses}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
-              Latest Products
-            </h2>
-            <p className="text-lg text-gray-600">Discover our newest arrivals</p>
-          </div>
           <div className="bg-white rounded-xl shadow-sm p-8 md:p-10 text-center">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
@@ -107,10 +104,6 @@ function LatestProducts() {
               Connection Error
             </h3>
             <p className="text-red-500 mb-4">{error}</p>
-            <p className="text-sm text-gray-600 mb-6">
-              Make sure your backend server is running on{" "}
-              {process.env.REACT_APP_API_URL || "http://localhost:3000"}
-            </p>
             <button
               onClick={handleRetry}
               className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors duration-200"
