@@ -32,7 +32,7 @@ function Cartproduct(props) {
       {/* Mobile Total Price */}
       <div className="sm:hidden absolute top-3 right-3 flex flex-col items-end mb-2">
         <p className="text-sm font-medium text-gray-100">
-          ${(props.price * props.count).toFixed(2)}
+          Rs.{(props.price * props.count).toFixed(2)}
         </p>
       </div>
 
@@ -50,7 +50,7 @@ function Cartproduct(props) {
           <h2 className="font-medium font-poppins text-gray-100 line-clamp-2 text-sm sm:text-base">
             {props.name}
           </h2>
-          <p className="text-gray-400 text-xs sm:text-sm">${props.price}</p>
+          <p className="text-gray-400 text-xs sm:text-sm pt-3 ">Rs.{props.price}</p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ function Cartproduct(props) {
         {/* Desktop Price and Delete */}
         <div className="hidden sm:flex items-center ml-8 w-40 justify-end gap-4">
           <p className="text-lg font-medium text-gray-100">
-            ${(props.price * props.count).toFixed(2)}
+            Rs.{(props.price * props.count).toFixed(2)}
           </p>
           <motion.button
             whileHover={{ scale: 1.1 }}

@@ -85,7 +85,7 @@ function Cart({ isOpen, onClose }) {
             {/* CheckOut section */}
             <div className="sticky bottom-0 bg-[#2a2a2a] rounded-lg flex justify-between px-4 py-2 m-3">
               <h2 className="font-semibold text-[#ffffff] font-poppins mt-2 text-lg ml-5">
-                Total: $
+                Total:
                 {cartProduct.items
                   .reduce((acc, item) => acc + item.price * item.count, 0)
                   .toFixed(2)}

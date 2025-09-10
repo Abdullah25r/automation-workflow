@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Import axios
+import axios from "axios";
 import ProductsHeader from "../components/ProductsComponents/ProductsHeader";
 import ProductCard from "../components/ProductsComponents/ProductCard";
 import { baseURL } from "../Api/productapi";
+
 const ProductCardSkeleton = () => (
   <div className="animate-pulse">
     <div className="bg-[#2a2a2a] rounded-lg h-56"></div>
@@ -33,11 +34,10 @@ function Products(props) {
       setIsLoading(true); 
       try {
         const response = await axios.get(API_URL);
-        setFetchedProducts(response.data); // Set the fetched data
+        setFetchedProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
-        
         const timer = setTimeout(() => {
           setIsLoading(false); 
         }, 1000);
@@ -46,9 +46,8 @@ function Products(props) {
     };
 
     fetchProducts();
-  },[]); // Empty dependency array means this runs once on mount
+  }, []);
 
-  // Handle category changes
   const handleCategoryChange = (newCategory) => {
     setIsChangingCategory(true);
     setCategory(newCategory);
@@ -58,28 +57,49 @@ function Products(props) {
     }, 400);
   };
 
+  // Get filtered products
+  const filteredProducts = filterProducts(category);
+  
   return (
-    <div className="px-4">
-      <ProductsHeader onCategorySelect={handleCategoryChange} />
+    <div className="min-h-screen bg-black text-white pt-20">
+      <div className="max-w-[1430px] mx-auto px-4">
+        <ProductsHeader onCategorySelect={handleCategoryChange} />
+        
+        {/* Results count */}
+        <div className="my-6 flex justify-between items-center">
+          <h2 className="text-xl font-semibold">
+            {category === "all" ? "All Products" : `${category.charAt(0).toUpperCase() + category.slice(1)}`}
+          </h2>
+          <span className="text-gray-400">
+            {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"} found
+          </span>
+        </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-4">
-        {(isLoading || isChangingCategory) ? (
-          Array(8).fill(0).map((_, index) => (
-            <ProductCardSkeleton key={`skeleton-${index}`} />
-          ))
-        ) : (
-          // Render actual product cards once data is loaded and not changing category
-          filterProducts(category).map((product, index) => (
-            <ProductCard
-              key={product.product_id} // Use product_id as the unique key
-              id={product.product_id} // Map product_id from API to id prop
-              path={product.image} // Map image from API to path prop
-              name={product.name}
-              desc={product.description}
-              price={product.price}
-            />
-          ))
-        )}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+          {(isLoading || isChangingCategory) ? (
+            Array(8).fill(0).map((_, index) => (
+              <ProductCardSkeleton key={`skeleton-${index}`} />
+            ))
+          ) : filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard
+                key={product.product_id}
+                id={product.product_id}
+                path={product.image}
+                name={product.name}
+                desc={product.description}
+                price={product.price}
+                category={product.category} // Pass category if needed
+              />
+            ))
+          ) : (
+            // No products found message
+            <div className="col-span-full text-center py-12">
+              <div className="text-gray-400 text-lg mb-2">No products found</div>
+              <p className="text-gray-500">Try selecting a different category</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
