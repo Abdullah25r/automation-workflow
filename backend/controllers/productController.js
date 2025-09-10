@@ -15,7 +15,23 @@ export async function getProducts(req, res) {
     res.status(500).json({ error: "Failed to fetch products" });
   }
 }
-
+export async function getLatestProducts(req, res) {
+  const limit = 8; // Default to 8
+  try {
+    const result = await pool.query(
+      `SELECT p.*, c.name AS category
+       FROM products p
+       JOIN categories c ON p.category_id = c.category_id
+       ORDER BY p.created_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Get latest products error:", error);
+    res.status(500).json({ error: "Failed to fetch latest products" });
+  }
+}
 // this will add products to database
 export async function addProducts(req, res) {
   // Destructure all expected fields, including the new ones
