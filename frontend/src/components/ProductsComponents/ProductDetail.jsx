@@ -155,11 +155,11 @@ function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-gray-900">
-      <div className="container mx-auto px-4 py-52">
+      <div className="container mx-auto px-4 py-28">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           {/* Product Image */}
           <div className="flex-1">
-            <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-2xl shadow-xl border border-gray-700">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to[#3a3a3a] p-6 rounded-2xl shadow-xl border border-gray-700">
               <img
                 src={product.image}
                 alt={product.name}
@@ -174,7 +174,7 @@ function ProductDetail() {
 
           {/* Product Details */}
           <div className="flex-1">
-            <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to[#3a3a3a] p-8 rounded-2xl shadow-xl border border-gray-700">
               {/* Product Title */}
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                 {product.name}
@@ -183,7 +183,7 @@ function ProductDetail() {
               {/* Product Meta */}
               <div className="space-y-3 mb-6">
                 <p className="text-gray-400 flex items-center">
-                  <span className="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-sm font-medium mr-3">
+                  <span className="bg-gradient-to-r from-cyan-400 via-cyan-600 to-sky-400 text-white px-3 py-1 rounded-full text-sm font-medium mr-3">
                     {product.category}
                   </span>
                 </p>
@@ -218,10 +218,10 @@ function ProductDetail() {
                 {isActuallyDiscounted ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-4">
-                      <span className="text-3xl font-bold text-green-400">
+                      <span className="text-3xl font-bold text-sky-400">
                         Rs. {product.discount_price.toLocaleString()}
                       </span>
-                      <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium">
+                      <span className="bg-sky-400 text-white px-3 py-1 rounded-full text-sm font-medium">
                         Save {discountPercentage}%
                       </span>
                     </div>
@@ -237,10 +237,10 @@ function ProductDetail() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col gap-4 mt-8">
+              <div className="flex flex-row gap-10 justify-center mt-8">
                 <button
                   onClick={() => handleCheckout(product)}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
+                  className="bg-gradient-to-r from-cyan-400 via-cyan-600 to-sky-400 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
                 >
                   Buy Now
                   <FiArrowRight className="w-5 h-5" />
@@ -249,7 +249,7 @@ function ProductDetail() {
                 <button
                   onClick={() => handleAddToCart(product)}
                   disabled={addingToCart}
-                  className="border-2 border-green-600 text-green-400 hover:bg-green-600 hover:text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="border-2 border-sky-400 text-sky-400 hover:bg-gradient-to-r from-cyan-400 via-cyan-600 to-sky-400 hover:text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {addingToCart ? (
                     <>

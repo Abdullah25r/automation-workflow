@@ -16,6 +16,12 @@
   color: #000000;            /* Tailwind's slate-50 */
 }
 
+/* In your global CSS (e.g. index.css) */
+html, body {
+  overflow-x: hidden;
+}
+
+
 /* index.css */
 ::-webkit-scrollbar {
   width: 6px;
