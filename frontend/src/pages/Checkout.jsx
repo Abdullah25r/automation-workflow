@@ -156,7 +156,7 @@ const Checkout = () => {
     };
   }, []);
 
-  const shippingFee = 5;
+  const shippingFee = 200;
   const totalPrice = items.reduce(
     (acc, item) => acc + item.price * item.count,
     0
@@ -487,7 +487,7 @@ const Checkout = () => {
                       <p className="text-xs text-gray-400">Qty: {item.count}</p>
                     </div>
                     <p className="font-semibold text-base text-[#d9d9d9]">
-                      ₨{(item.price * item.count).toFixed(2)}
+                      ₨{item.price}
                     </p>
                   </div>
                 ))}

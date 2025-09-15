@@ -34,6 +34,7 @@ function Cart({ isOpen, onClose }) {
   const handleCheckout = () => {
     onClose();
     navigate("/checkout");
+    window.scrollTo(0,0);
   };
 
   return (

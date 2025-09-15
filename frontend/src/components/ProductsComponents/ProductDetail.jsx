@@ -97,7 +97,10 @@ function ProductDetail() {
 
   const handleAddToCart = async (product) => {
     setAddingToCart(true);
-    context.addProduct(product);
+    context.addProduct({
+      ...product,
+      id:product.product_id,
+    });
     
     // Simulate a brief loading state for better UX
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -105,7 +108,10 @@ function ProductDetail() {
   };
 
   const handleCheckout = (product) => {
-    context.addProduct(product);
+    context.addProduct({
+      ...product,
+      id:product.product_id,
+    });
     navigate("/checkout");
   };
 

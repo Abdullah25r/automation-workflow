@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Star from "../Star";
-import { cartContext } from "../../Context/CartContext"; 
+import { cartContext } from "../../Context/CartContext";
 import { Link } from "react-router-dom";
 
 const ProductCard = (props) => {
@@ -9,7 +9,7 @@ const ProductCard = (props) => {
     // Scroll to top when the product link is clicked
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
@@ -24,8 +24,12 @@ const ProductCard = (props) => {
           />
         </div>
         <div className="description-section text-center">
-          <h2 className="font-poppins font-semibold text-base text-white">{props.name}</h2>
-          <p className="text-sm text-gray-300 line-clamp-2 hidden sm:block">{props.desc}</p>
+          <h2 className="font-poppins font-semibold text-base text-white">
+            {props.name}
+          </h2>
+          <p className="text-sm text-gray-300 line-clamp-2 hidden sm:block">
+            {props.desc}
+          </p>
           <div className="hidden sm:block">
             <Star />
           </div>
@@ -42,8 +46,13 @@ const ProductCard = (props) => {
           type="button"
           className="text-black bg-white text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 inline-flex justify-center items-center border border-[#64748b] rounded-md hover:bg-[#1a1a1a] hover:text-white transition duration-250 ease-in-out font-medium w-full sm:w-auto"
           onClick={() => {
-            addProduct(props); 
-            openCart(); 
+            addProduct({
+              id: props.id,
+              name: props.name,
+              price: props.price,
+              image: props.path, 
+            });
+            openCart();
           }}
         >
           <svg
