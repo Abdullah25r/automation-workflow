@@ -224,7 +224,8 @@ const Checkout = () => {
         order_items: items.map(item => ({
           product_id: item.id || item.product_id,
           quantity: item.count,
-          price: item.price
+          price: item.price,
+          image:item.image
         }))
       };
 
@@ -233,10 +234,11 @@ const Checkout = () => {
       if (response.status === 201 || response.status === 200) {
         setModal({ message: "Order Placed Successfully!", type: "success" });
         clearCart();
-        setTimeout(() => {
+
           setModal(null);
-          navigate('/');
-        }, 2500); // Increased delay to allow animation to play
+          navigate('/order-confirmation' , {state : {orderData}});
+          window.scrollTo(0,0);
+
       } else {
         setModal({ message: `Order placement failed: ${response.data.message || 'Unknown error'}`, type: "error" });
       }

@@ -13,6 +13,7 @@ import Contact from "./pages/ContactUs";
 import ProductDetail from "./components/ProductsComponents/ProductDetail";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About"
+import OrderConfirmation from "./pages/OrderConfirmation";
 import MobileCart from "./pages/MobileCart";
 import Checkout from "./pages/Checkout";
 import FAQs from "./components/FAQs";
@@ -46,6 +47,7 @@ const hideWhatsApp =
           <Route path="/return-refund" element={<ReturnRefundPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsAndConditions />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mobile-cart" element={<MobileCart />} />
