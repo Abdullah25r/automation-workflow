@@ -40,7 +40,7 @@ const ContactUs = () => {
     {
       icon: FaPhone,
       title: "Call Us",
-      details: "+92 301 4595772",
+      details: "+92 3120644468",
       description: "Mon to Fri 9am to 6pm",
       action: "tel:+15551234567",
       color: "bg-blue-500"
@@ -48,9 +48,9 @@ const ContactUs = () => {
     {
       icon: FaWhatsapp,
       title: "WhatsApp",
-      details: "+92 301 4595772",
+      details: "+923120644468",
       description: "24/7 support",
-      action: "https://wa.me/+923014595772",
+      action: "https://wa.me/+923120644468",
       color: "bg-green-500"
     },
     {
